@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  {% from "resume/_macros.html" import contact_row, photo_box, exp_list, exp_dot, edu_list, skill_tags, lang_list, sec_title %}
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+    @page { margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; font-size: 10pt; line-height: 1.55; color: #1a1a1a; background: #fff; }
+    .page { background: #fff; min-height: 297mm;  }
+    .header { padding:2rem 2rem 0.5rem; }
+    .body { padding: 1.5rem 2rem; }
+    .sec { margin-bottom: 1.1rem; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1 style="font-size:20pt;font-weight:800;margin:0;">{{ contacts.name }}</h1>
+      <p style="font-size:10pt;color:rgba(0,0,0,0.5);margin:4px 0 6px;">{{ contacts.jobTitle }}</p>
+      <div>{{ contact_row(contacts) }}</div>
+    </div>
+    <div class="body">
+      {% if summary %}
+      <div class="sec">{{ sec_title('Summary','#374151','default') }}<p style="font-size:9pt;color:#555;">{{ summary }}</p></div>
+      {% endif %}
+      {% if experience %}
+      <div class="sec">{{ sec_title('Experience','#374151','default') }}{{ exp_list(experience) }}</div>
+      {% endif %}
+      {% if education %}
+      <div class="sec">{{ sec_title('Education','#374151','default') }}{{ edu_list(education) }}</div>
+      {% endif %}
+      {% if skills %}
+      <div class="sec">{{ sec_title('Skills','#374151','default') }}{{ skill_tags(skills) }}</div>
+      {% endif %}
+      {% if languages %}
+      <div class="sec">{{ sec_title('Languages','#374151','default') }}{{ lang_list(languages,'#374151') }}</div>
+      {% endif %}
+      {% if certifications %}
+      <div class="sec">{{ sec_title('Certifications','#374151','default') }}<p style="font-size:9pt;color:#555;">{{ certifications }}</p></div>
+      {% endif %}
+      {% if awards %}
+      <div class="sec">{{ sec_title('Awards','#374151','default') }}<p style="font-size:9pt;color:#555;">{{ awards }}</p></div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

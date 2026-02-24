@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  {% from "resume/_macros.html" import contact_row, photo_box, exp_dot, edu_list, skill_tags, lang_list, sec_title %}
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    @page { margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; font-size: 10pt; line-height: 1.55; color: #1a1a1a; }
+    .banner { background: #0ea5e9; padding: 1.75rem 2rem; display: flex; align-items: center; gap: 1.25rem; }
+    .body { padding: 1.75rem 2rem; }
+    .sec { margin-bottom: 1.1rem; }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    {{ photo_box(contacts.photoUrl, 80, '50%', 'border:3px solid rgba(255,255,255,0.8);flex-shrink:0;') }}
+    <div style="flex:1;">
+      <h1 style="font-size:20pt;font-weight:700;color:#fff;margin:0;">{{ contacts.name }}</h1>
+      <p style="font-size:10pt;color:rgba(255,255,255,0.85);margin:3px 0;">{{ contacts.jobTitle }}</p>
+      <p style="font-size:8pt;color:rgba(255,255,255,0.65);margin-top:4px;">{{ contact_row(contacts,' · ','rgba(255,255,255,0.7)') }}</p>
+    </div>
+  </div>
+  <div class="body">
+    {% if summary %}<div class="sec">{{ sec_title('Summary','#0ea5e9','bar') }}<p style="font-size:9pt;color:#555;">{{ summary }}</p></div>{% endif %}
+    {% if experience %}<div class="sec">{{ sec_title('Experience','#0ea5e9','bar') }}{{ exp_dot(experience,'#0ea5e9') }}</div>{% endif %}
+    {% if education %}<div class="sec">{{ sec_title('Education','#0ea5e9','bar') }}{{ edu_list(education) }}</div>{% endif %}
+    {% if skills %}<div class="sec">{{ sec_title('Skills','#0ea5e9','bar') }}{{ skill_tags(skills,'#e0f2fe','#0ea5e9') }}</div>{% endif %}
+    {% if languages %}<div class="sec">{{ sec_title('Languages','#0ea5e9','bar') }}{{ lang_list(languages,'#0ea5e9') }}</div>{% endif %}
+    {% if certifications %}<div class="sec">{{ sec_title('Certifications','#0ea5e9','bar') }}<p style="font-size:9pt;color:#555;">{{ certifications }}</p></div>{% endif %}
+  </div>
+</body>
+</html>

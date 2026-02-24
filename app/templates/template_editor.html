@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Customize your resume template — choose design, colors, fonts, and run spell check before export.">
+  <title>Template Editor — Resume Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/template_editor.css') }}">
+</head>
+<body>
+  <a href="#panel-templates" class="skip-link">Skip to template options</a>
+  <div class="template-editor">
+    <header class="header-bar">
+      <a href="/editor" class="nav-back">Back to editor</a>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <button id="btn-download-pdf" class="btn-download-pdf">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF
+        </button>
+        <span class="saved-badge">✔ Saved</span>
+      </div>
+    </header>
+    <div class="body-row">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-items">
+          <button class="sidebar-item active" data-panel="templates" title="Templates">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <span class="item-label">Templates</span>
+          </button>
+          <button class="sidebar-item" data-panel="section" title="Section">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span class="item-label">Section</span>
+          </button>
+          <button class="sidebar-item" data-panel="design" title="Design & Formatting">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.648 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.555C21.965 6.012 17.461 2 12 2z"/></svg>
+            <span class="item-label">Design</span>
+          </button>
+          <button class="sidebar-item" data-panel="spellcheck" title="Spell check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8"/><path d="M8 11h4"/></svg>
+            <span class="item-label">Spell check</span>
+          </button>
+        </div>
+        <button class="sidebar-toggle" id="sidebar-toggle" title="Collapse sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </aside>
+      <main class="center-pane" role="main">
+
+        <!-- Templates Panel -->
+        <div class="panel active" id="panel-templates">
+          <h2 class="panel-title">Templates</h2>
+          <p class="panel-subtitle">Choose a template to apply to your resume.</p>
+          <div class="color-swatches">
+            <button class="color-swatch active" data-color="#f8fafc" style="background:#f8fafc;" title="Light"></button>
+            <button class="color-swatch" data-color="#e0f2fe" style="background:#e0f2fe;" title="Light Blue"></button>
+            <button class="color-swatch" data-color="#1e3a5f" style="background:#1e3a5f;" title="Dark Blue"></button>
+            <button class="color-swatch" data-color="#0f766e" style="background:#0f766e;" title="Teal"></button>
+          </div>
+          <div class="template-grid" id="template-grid">
+            {% set tmpl_list = [
+              ('classic','Classic'),('minimal','Minimal'),('executive','Executive'),('clean','Clean'),
+              ('bold','Bold'),('corporate','Corporate'),('elegant','Elegant'),('simple','Simple'),
+              ('photo_classic','Photo Classic'),('photo_modern','Photo Modern'),
+              ('photo_minimal','Photo Minimal'),('photo_executive','Photo Exec'),
+              ('modern','Modern'),('two_col_blue','Navy Blue'),('two_col_green','Forest Green'),
+              ('two_col_red','Burgundy'),('two_col_warm','Terracotta'),('two_col_light','Light Sidebar'),
+              ('two_col_photo_blue','Blue + Photo'),('two_col_photo_dark','Dark + Photo'),
+              ('two_col_photo_green','Green + Photo'),('two_col_photo_teal','Teal + Photo'),
+              ('timeline','Timeline'),('infographic','Infographic')
+            ] %}
+            {% for tid, tname in tmpl_list %}
+            <div class="template-card" data-template="{{ tid }}" title="{{ tname }}">
+              <div class="template-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+              <div class="template-card-thumb">
+                <div class="template-card-inner" id="thumb-{{ tid }}"></div>
+              </div>
+              <div class="template-card-name">{{ tname }}</div>
+            </div>
+            {% endfor %}
+          </div>
+        </div><!-- end panel-templates -->
+
+        <!-- Section Panel -->
+        <div class="panel" id="panel-section">
+          <h2 class="panel-title">Sections</h2>
+          <p class="panel-subtitle" id="section-panel-subtitle">Drag to reorder sections in your resume.</p>
+          <div id="section-layout-container"></div>
+        </div><!-- end panel-section -->
+
+        <!-- Design Panel -->
+        <div class="panel" id="panel-design">
+          <h2 class="panel-title">Design & Formatting</h2>
+          <p class="panel-subtitle">Customise fonts, colors and spacing to make your resume stand out.</p>
+          <div class="design-group">
+            <div class="design-label">Font</div>
+            <div class="font-options">
+              <div class="font-option active" data-font="sans-serif">
+                <span class="font-name" style="font-family:sans-serif;">Aa</span>
+                Sans-serif
+              </div>
+              <div class="font-option" data-font="Georgia, serif">
+                <span class="font-name" style="font-family:Georgia,serif;">Aa</span>
+                Serif
+              </div>
+              <div class="font-option" data-font="'Courier New', monospace">
+                <span class="font-name" style="font-family:'Courier New',monospace;">Aa</span>
+                Mono
+              </div>
+            </div>
+          </div>
+          <div class="design-group">
+            <div class="design-label">Accent Color</div>
+            <div class="accent-colors">
+              <button class="accent-color-btn active" data-accent="#1e3a5f" style="background:#1e3a5f;" title="Navy"></button>
+              <button class="accent-color-btn" data-accent="#2563eb" style="background:#2563eb;" title="Blue"></button>
+              <button class="accent-color-btn" data-accent="#0f766e" style="background:#0f766e;" title="Teal"></button>
+              <button class="accent-color-btn" data-accent="#7c3aed" style="background:#7c3aed;" title="Purple"></button>
+              <button class="accent-color-btn" data-accent="#dc2626" style="background:#dc2626;" title="Red"></button>
+              <button class="accent-color-btn" data-accent="#d97706" style="background:#d97706;" title="Amber"></button>
+              <button class="accent-color-btn" data-accent="#1a1a1a" style="background:#1a1a1a;" title="Black"></button>
+            </div>
+          </div>
+          <div class="design-group">
+            <div class="design-label">Line Spacing</div>
+            <div class="spacing-options">
+              <div class="spacing-option" data-spacing="1.3">Compact</div>
+              <div class="spacing-option active" data-spacing="1.5">Normal</div>
+              <div class="spacing-option" data-spacing="1.8">Relaxed</div>
+            </div>
+          </div>
+        </div><!-- end panel-design -->
+
+        <!-- Spell Check Panel -->
+        <div class="panel" id="panel-spellcheck">
+          <h2 class="panel-title">Spell Check</h2>
+          <p class="panel-subtitle">Scan your resume for spelling errors before sending it out.</p>
+          <button class="spellcheck-btn" id="btn-run-spellcheck">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Run Spell Check
+          </button>
+          <div class="spellcheck-results" id="spellcheck-results">
+            <p style="font-size:0.875rem;color:var(--text-muted);">Click "Run Spell Check" to scan your resume text for errors.</p>
+          </div>
+        </div><!-- end panel-spellcheck -->
+
+      </main>
+      <aside class="right-pane">
+        <div class="preview-container">
+          <div class="preview-paper" id="preview-paper"></div>
+        </div>
+        <div class="preview-pagination">
+          <button type="button" id="prev-page" title="Previous page">‹</button>
+          <span id="page-info">Page 1 of 1</span>
+          <button type="button" id="next-page" title="Next page">›</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/resume-templates.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/template_editor.js') }}"></script>
+</body>
+</html>

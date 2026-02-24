@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Choose from 24 professional resume templates. Filter by style, columns, and photo support.">
+  <title>Choose a Resume Template — ResumeForge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/choose_templates.css') }}">
+</head>
+<body>
+<a href="#ct-content" class="skip-link">Skip to templates</a>
+
+<!-- ── Nav ────────────────────────────────────────────────────────────────── -->
+<nav class="ct-nav" role="navigation" aria-label="Main navigation">
+  <a href="/" class="ct-logo">
+    <div class="ct-logo-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </div>
+    ResumeForge
+  </a>
+  <div class="ct-nav-right">
+    <a href="/login" class="ct-nav-link">Sign In</a>
+    <a href="/templates" class="ct-nav-btn" style="text-decoration:none;">Build My Resume</a>
+  </div>
+</nav>
+
+<!-- ── Hero title ──────────────────────────────────────────────────────────── -->
+<div class="ct-hero">
+  <h1 class="ct-title">Choose from our resume templates</h1>
+  <p class="ct-sub">You can always change your template later.</p>
+</div>
+
+<!-- ── Main layout ─────────────────────────────────────────────────────────── -->
+<div class="ct-layout" id="ct-content" role="main">
+
+  <!-- Sidebar filters -->
+  <aside class="ct-sidebar" role="complementary" aria-label="Template filters">
+    <div class="ct-sidebar-header">
+      <span class="ct-sidebar-title">Filters</span>
+      <button class="ct-clear-btn" id="clearFilters">Clear filters</button>
+    </div>
+
+    <div class="ct-filter-group">
+      <div class="ct-filter-label">HEADSHOT</div>
+      <label class="ct-checkbox">
+        <input type="checkbox" name="photo" value="with" id="filter-with-photo">
+        <span class="ct-checkmark"></span>
+        With photo
+      </label>
+      <label class="ct-checkbox">
+        <input type="checkbox" name="photo" value="without" id="filter-without-photo">
+        <span class="ct-checkmark"></span>
+        Without photo
+      </label>
+    </div>
+
+    <div class="ct-filter-group">
+      <div class="ct-filter-label">COLUMNS</div>
+      <label class="ct-checkbox">
+        <input type="checkbox" name="cols" value="1" id="filter-1col">
+        <span class="ct-checkmark"></span>
+        1 column
+      </label>
+      <label class="ct-checkbox">
+        <input type="checkbox" name="cols" value="2" id="filter-2col">
+        <span class="ct-checkmark"></span>
+        2 columns
+      </label>
+    </div>
+
+    <div class="ct-filter-group">
+      <div class="ct-filter-label">STYLE</div>
+      <label class="ct-checkbox">
+        <input type="checkbox" name="style" value="professional" id="filter-prof">
+        <span class="ct-checkmark"></span>
+        Professional
+      </label>
+      <label class="ct-checkbox">
+        <input type="checkbox" name="style" value="creative" id="filter-creative">
+        <span class="ct-checkmark"></span>
+        Creative
+      </label>
+      <label class="ct-checkbox">
+        <input type="checkbox" name="style" value="minimal" id="filter-minimal">
+        <span class="ct-checkmark"></span>
+        Minimal
+      </label>
+    </div>
+  </aside>
+
+  <!-- Template grid -->
+  <div class="ct-content">
+    <div class="ct-results-bar">
+      <span class="ct-count" id="resultCount">24 templates</span>
+    </div>
+    <div class="ct-grid" id="ctGrid">
+      <!-- Cards injected by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ── Upload modal (same as landing page) ────────────────────────────────── -->
+<div class="ct-modal-overlay" id="ctModal">
+  <div class="ct-modal">
+    <button class="ct-modal-close" id="ctModalClose">✕</button>
+    <div class="ct-modal-icon">📄</div>
+    <div class="ct-modal-title">Start Your Resume</div>
+    <p class="ct-modal-sub">Upload your existing resume and we'll auto-fill your details, or start fresh with your chosen template.</p>
+
+    <div class="ct-upload-zone" id="ctUploadZone">
+      <input type="file" id="ctFileInput" accept=".pdf,.docx,.doc" tabindex="-1">
+      <div id="ctUploadContent">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">☁️</div>
+        <div style="font-weight:600;color:#334155;margin-bottom:4px;">Drag &amp; drop your resume here</div>
+        <p style="font-size:0.82rem;color:#94a3b8;">or <span style="color:#4f46e5;font-weight:600;">click to browse</span> · PDF or DOCX · Max 10MB</p>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:0.75rem;margin:1.25rem 0;color:#9ca3af;font-size:0.82rem;">
+      <div style="flex:1;height:1px;background:#e5e7eb;"></div>or<div style="flex:1;height:1px;background:#e5e7eb;"></div>
+    </div>
+
+    <button class="ct-skip-btn" id="ctSkip">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      Start with a blank resume
+    </button>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/resume-templates.js') }}"></script>
+<script src="{{ url_for('static', filename='js/choose_templates.js') }}"></script>
+</body>
+</html>

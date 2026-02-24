@@ -1,0 +1,90 @@
+{# ── Shared resume macros ── used by all PDF template files ────────────────── #}
+
+{% macro contact_row(contacts, sep=' · ', color='#64748b') %}
+  {%- set parts = [] -%}
+  {%- if contacts.email     %}{% set _ = parts.append(contacts.email) %}{% endif -%}
+  {%- if contacts.phone     %}{% set _ = parts.append((contacts.phoneCode or '')+' '+(contacts.phone or '')) %}{% endif -%}
+  {%- if contacts.city or contacts.country %}{% set _ = parts.append([contacts.city, contacts.country]|select|join(', ')) %}{% endif -%}
+  {%- if contacts.linkedin  %}{% set _ = parts.append(contacts.linkedin) %}{% endif -%}
+  <span style="font-size:8.5pt;color:{{ color }};">{{ parts|join('<span style="color:#ccc;margin:0 4px;">' + sep + '</span>') }}</span>
+{% endmacro %}
+
+{% macro photo_box(url, size, radius='50%', extra='') %}
+  {% if url %}
+    <img src="{{ url }}" alt="" style="width:{{ size }}px;height:{{ size }}px;object-fit:cover;border-radius:{{ radius }};{{ extra }}">
+  {% else %}
+    <div style="width:{{ size }}px;height:{{ size }}px;border-radius:{{ radius }};background:#cbd5e1;display:flex;align-items:center;justify-content:center;{{ extra }}">
+      <svg width="{{ (size*0.5)|int }}" height="{{ (size*0.5)|int }}" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro exp_list(experience) %}
+  {% for e in experience %}
+    <div style="margin-bottom:1rem;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <strong style="font-size:9pt;">{{ e.role }}</strong>
+        <span style="font-size:8pt;color:#888;white-space:nowrap;">{{ e.dates }}</span>
+      </div>
+      <div style="font-size:8.5pt;color:#64748b;margin-bottom:2px;">{{ e.company }}</div>
+      <p style="font-size:8pt;color:#555;line-height:1.45;margin:0;">{{ e.description }}</p>
+    </div>
+  {% endfor %}
+{% endmacro %}
+
+{% macro exp_dot(experience, accent) %}
+  {% for e in experience %}
+    <div style="display:flex;gap:0.6rem;margin-bottom:1rem;">
+      <div style="flex-shrink:0;width:9px;height:9px;border-radius:50%;background:{{ accent }};margin-top:4px;"></div>
+      <div>
+        <div style="font-size:8pt;color:#64748b;">{{ e.dates }}</div>
+        <strong style="font-size:9pt;color:#1a1a1a;">{{ e.role }}</strong>
+        <div style="font-size:8.5pt;color:#64748b;">{{ e.company }}</div>
+        <p style="font-size:8pt;color:#555;line-height:1.45;margin:2px 0 0;">{{ e.description }}</p>
+      </div>
+    </div>
+  {% endfor %}
+{% endmacro %}
+
+{% macro edu_list(education) %}
+  {% for e in education %}
+    <div style="margin-bottom:0.6rem;">
+      <strong style="font-size:9pt;">{{ e.degree }}</strong>
+      <div style="font-size:8.5pt;color:#64748b;">{{ e.school }}</div>
+      <div style="font-size:8pt;color:#888;">{{ e.dates }}</div>
+    </div>
+  {% endfor %}
+{% endmacro %}
+
+{% macro skill_tags(skills, bg='#f1f5f9', color='#334155') %}
+  <div style="display:flex;flex-wrap:wrap;gap:4px;">
+    {% for s in skills %}
+      <span style="font-size:8pt;background:{{ bg }};color:{{ color }};padding:2px 8px;border-radius:999px;">{{ s }}</span>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro lang_list(languages, accent='#4f46e5') %}
+  {% for l in languages %}
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:8.5pt;">
+      <span>{{ l.name }}</span>
+      <div>{% for n in range(1,6) %}<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:{{ accent if n <= l.level else '#e2e8f0' }};margin-left:2px;"></span>{% endfor %}</div>
+    </div>
+  {% endfor %}
+{% endmacro %}
+
+{% macro sec_title(text, accent, style='bar') %}
+  {% if style == 'bar' %}
+    <h2 style="font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:{{ accent }};border-bottom:2px solid {{ accent }};padding-bottom:3px;margin:0 0 8px;">{{ text }}</h2>
+  {% elif style == 'track' %}
+    <h2 style="font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#374151;margin:0 0 8px;">{{ text }}</h2>
+  {% elif style == 'dot' %}
+    <h2 style="font-size:9pt;font-weight:700;color:#1a1a1a;margin:0 0 8px;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:{{ accent }};margin-right:6px;"></span>{{ text }}</h2>
+  {% elif style == 'bold' %}
+    <h2 style="font-size:10pt;font-weight:800;color:#111;border-left:3px solid {{ accent }};padding-left:6px;margin:0 0 8px;">{{ text }}</h2>
+  {% elif style == 'elegant' %}
+    <h2 style="font-size:9pt;font-weight:600;color:{{ accent }};border-bottom:1px solid {{ accent }};padding-bottom:3px;margin:0 0 8px;letter-spacing:0.04em;">{{ text }}</h2>
+  {% else %}
+    <h2 style="font-size:9pt;font-weight:700;text-transform:uppercase;color:#1a1a1a;border-bottom:1px solid #e2e8f0;padding-bottom:3px;margin:0 0 8px;letter-spacing:0.04em;">{{ text }}</h2>
+  {% endif %}
+{% endmacro %}

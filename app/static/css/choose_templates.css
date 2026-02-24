@@ -1,0 +1,370 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f8fafc;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+/* ── Nav ─────────────────────────────────────────────────────────────────── */
+.ct-nav {
+  background: #0c4a6e;
+  padding: 0.9rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.ct-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.ct-logo-icon {
+  width: 28px; height: 28px;
+  background: var(--rf-primary);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ct-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.ct-nav-link {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+.ct-nav-link:hover { color: #fff; }
+.ct-nav-btn {
+  background: var(--rf-primary);
+  color: #fff;
+  text-decoration: none;
+  padding: 0.45rem 1.1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.ct-nav-btn:hover { background: var(--rf-primary-hover); }
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+.ct-hero {
+  text-align: center;
+  padding: 2.5rem 2rem 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+}
+.ct-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.4rem;
+}
+.ct-sub {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+/* ── Layout ───────────────────────────────────────────────────────────────── */
+.ct-layout {
+  display: flex;
+  gap: 0;
+  min-height: calc(100vh - 130px);
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────────── */
+.ct-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: #fff;
+  border-right: 1px solid #e2e8f0;
+  padding: 1.5rem 1.25rem;
+}
+.ct-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.ct-sidebar-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.ct-clear-btn {
+  background: none;
+  border: none;
+  font-size: 0.78rem;
+  color: var(--rf-primary);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 0;
+}
+.ct-clear-btn:hover { text-decoration: underline; }
+
+.ct-filter-group {
+  margin-bottom: 1.5rem;
+}
+.ct-filter-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: #64748b;
+  margin-bottom: 0.65rem;
+}
+
+.ct-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #334155;
+  margin-bottom: 0.5rem;
+  user-select: none;
+}
+.ct-checkbox input { display: none; }
+.ct-checkmark {
+  width: 17px; height: 17px;
+  border: 2px solid #cbd5e1;
+  border-radius: 3px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.ct-checkbox input:checked + .ct-checkmark {
+  background: var(--rf-primary);
+  border-color: var(--rf-primary);
+}
+.ct-checkbox input:checked + .ct-checkmark::after {
+  content: '';
+  width: 5px; height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translate(-1px, -1px);
+  display: block;
+}
+
+/* ── Content ──────────────────────────────────────────────────────────────── */
+.ct-content {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  min-width: 0;
+}
+.ct-results-bar {
+  margin-bottom: 1rem;
+}
+.ct-count {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* ── Grid ─────────────────────────────────────────────────────────────────── */
+.ct-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* ── Template card ────────────────────────────────────────────────────────── */
+.ct-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.22s;
+  position: relative;
+}
+.ct-card:hover {
+  border-color: var(--rf-primary);
+  box-shadow: 0 8px 32px rgba(2,132,199,0.15);
+  transform: translateY(-3px);
+}
+.ct-card.hidden { display: none; }
+
+.ct-card-thumb {
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  position: relative;
+  background: #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
+}
+.ct-card-thumb-inner {
+  transform-origin: top left;
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+}
+.ct-card-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(2,132,199,0.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.ct-card:hover .ct-card-thumb-overlay { opacity: 1; }
+.ct-overlay-btn {
+  background: #fff;
+  color: var(--rf-primary);
+  border: none;
+  padding: 0.55rem 1.4rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.ct-overlay-btn:hover { background: var(--rf-primary-light); }
+.ct-overlay-btn.secondary {
+  background: transparent;
+  color: rgba(255,255,255,0.85);
+  border: 1.5px solid rgba(255,255,255,0.5);
+  font-weight: 500;
+}
+
+/* Recommended badge */
+.ct-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #f59e0b;
+  color: #fff;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 5px;
+  text-transform: uppercase;
+}
+
+.ct-card-footer {
+  padding: 0.75rem 1rem 0.6rem;
+}
+.ct-card-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+/* Color swatches */
+.ct-swatches {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.ct-swatch {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  outline: none;
+}
+.ct-swatch:hover,
+.ct-swatch.active { border-color: #fff; box-shadow: 0 0 0 2px currentColor; }
+
+/* ── Modal ─────────────────────────────────────────────────────────────────── */
+.ct-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.ct-modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.ct-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.ct-modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: none; border: none;
+  font-size: 1rem; cursor: pointer;
+  color: #94a3b8;
+}
+.ct-modal-close:hover { color: #334155; }
+.ct-modal-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.ct-modal-title { font-size: 1.2rem; font-weight: 700; color: #0f172a; margin-bottom: 0.4rem; }
+.ct-modal-sub { font-size: 0.85rem; color: #64748b; margin-bottom: 1.25rem; }
+
+.ct-upload-zone {
+  border: 2px dashed #bae6fd;
+  border-radius: 10px;
+  padding: 1.5rem;
+  cursor: pointer;
+  text-align: center;
+  background: var(--rf-primary-light);
+  transition: all 0.15s;
+}
+.ct-upload-zone:hover { border-color: var(--rf-primary); background: #bae6fd; }
+
+.ct-skip-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.ct-skip-btn:hover { background: #e2e8f0; }
+
+@media (max-width: 1024px) { .ct-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .ct-sidebar { width: 160px; padding: 1rem; }
+  .ct-grid { grid-template-columns: 1fr; }
+  .ct-content { padding: 1rem; }
+  .ct-title { font-size: 1.4rem; }
+}

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 240" fill="none">
+  <!-- Main document -->
+  <g transform="translate(50, 30)">
+    <rect x="0" y="0" width="110" height="150" rx="10" fill="#fff" stroke="#7C3AED" stroke-width="2" filter="drop-shadow(0 4px 12px rgba(124,58,237,0.15))"/>
+    <!-- Resume text lines -->
+    <rect x="18" y="28" width="74" height="5" rx="2" fill="#E9D5FF"/>
+    <rect x="18" y="42" width="60" height="5" rx="2" fill="#E9D5FF"/>
+    <rect x="18" y="56" width="68" height="5" rx="2" fill="#E9D5FF"/>
+    <rect x="18" y="78" width="50" height="5" rx="2" fill="#C4B5FD"/>
+    <rect x="18" y="92" width="74" height="5" rx="2" fill="#E9D5FF"/>
+    <rect x="18" y="106" width="55" height="5" rx="2" fill="#E9D5FF"/>
+    <rect x="18" y="120" width="70" height="5" rx="2" fill="#E9D5FF"/>
+    <!-- Briefcase badge -->
+    <g transform="translate(35, 95)">
+      <rect x="0" y="10" width="40" height="28" rx="5" fill="#7C3AED"/>
+      <rect x="5" y="0" width="30" height="14" rx="3" fill="#8B5CF6"/>
+      <rect x="16" y="16" width="8" height="14" fill="#A78BFA"/>
+    </g>
+  </g>
+  <!-- Bar chart icon (reports/data) -->
+  <g transform="translate(175, 25)">
+    <rect x="0" y="25" width="14" height="35" rx="3" fill="#7C3AED" opacity="0.9"/>
+    <rect x="20" y="35" width="14" height="25" rx="3" fill="#8B5CF6" opacity="0.9"/>
+    <rect x="40" y="15" width="14" height="45" rx="3" fill="#A78BFA" opacity="0.9"/>
+    <path d="M7 20L21 30L47 10" stroke="#7C3AED" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- Decorative elements -->
+  <circle cx="225" cy="105" r="5" fill="#C4B5FD" opacity="0.9"/>
+  <circle cx="225" cy="125" r="5" fill="#C4B5FD" opacity="0.9"/>
+</svg>

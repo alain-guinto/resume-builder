@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Build and edit your resume with our guided editor. Add experience, education, skills, and more — with live preview.">
+  <title>Resume Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">
+</head>
+<body>
+  <a href="#editor-panel" class="skip-link">Skip to editor</a>
+  <div class="app">
+    <div class="body-row">
+    <div class="left-pane">
+      <div class="left-pane-nav">
+        <nav class="nav-steps" role="navigation" aria-label="Editor steps">
+          <div class="nav-step active" data-step="0">Contacts</div>
+          <div class="nav-step" data-step="1">Experience</div>
+          <div class="nav-step" data-step="2">Education</div>
+          <div class="nav-step" data-step="3">Skills</div>
+          <div class="nav-step" data-step="4">Summary</div>
+          <div class="nav-step" data-step="5">Additional</div>
+        </nav>
+      </div>
+    <main class="editor-panel" id="editor-panel" role="main">
+      <!-- Step 0: Contacts (server-rendered values when from upload) -->
+      {% set c = (initial_resume_data or {}).get('contacts') or {} %}
+      {% set name_parts = (c.get('name') or '').split() %}
+      {% set first = c.get('firstName') or (name_parts[0] if name_parts else '') %}
+      {% set last = c.get('lastName') or (' '.join(name_parts[1:]) if name_parts else '') %}
+      <section class="editor-section active" data-step="0">
+        <h2>Contacts</h2>
+        <p class="section-intro">Add your up-to-date contact information so employers and recruiters can easily reach you.</p>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="contact-firstName">First name</label>
+            <input type="text" id="contact-firstName" placeholder="John" value="{{ first }}" autocomplete="given-name">
+          </div>
+          <div class="form-group">
+            <label for="contact-lastName">Last name</label>
+            <input type="text" id="contact-lastName" placeholder="Doe" value="{{ last }}" autocomplete="family-name">
+          </div>
+        </div>
+        <div class="form-row-job-photo">
+          <div class="form-group">
+            <label for="contact-jobTitle">Desired job title</label>
+            <input type="text" id="contact-jobTitle" placeholder="Software Engineer" value="{{ c.get('jobTitle', '') }}">
+          </div>
+          <div class="form-group">
+            <label for="profile-photo-input">Profile photo</label>
+            <div class="photo-upload-area">
+              <div class="photo-preview-wrap">
+                <img id="profile-photo-preview" src="" alt="Profile" class="profile-photo-img" style="display:none;">
+                <div id="profile-photo-placeholder" class="profile-photo-placeholder">
+                  <span>No photo</span>
+                </div>
+              </div>
+              <div class="photo-actions">
+                <input type="file" id="profile-photo-input" accept="image/*" style="display:none;">
+                <a class="photo-upload-link" id="btn-upload-photo">↑ Upload new photo</a>
+                <a class="photo-delete-link" id="btn-remove-photo" style="display:none;">Delete photo</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="contact-phone">Phone</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <select id="contact-phoneCode" style="width: 100px; padding: 0.6rem 0.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; color: #1e293b; font-size: 0.9rem;">
+                {% set pc = c.get('phoneCode', '+1') %}
+                <option value="+1" {{ 'selected' if pc == '+1' else '' }}>+1</option>
+                <option value="+44" {{ 'selected' if pc == '+44' else '' }}>+44</option>
+                <option value="+63" {{ 'selected' if pc == '+63' else '' }}>+63</option>
+                <option value="+61" {{ 'selected' if pc == '+61' else '' }}>+61</option>
+                <option value="+49" {{ 'selected' if pc == '+49' else '' }}>+49</option>
+                <option value="+33" {{ 'selected' if pc == '+33' else '' }}>+33</option>
+                <option value="+81" {{ 'selected' if pc == '+81' else '' }}>+81</option>
+                <option value="+86" {{ 'selected' if pc == '+86' else '' }}>+86</option>
+                <option value="+91" {{ 'selected' if pc == '+91' else '' }}>+91</option>
+                <option value="+55" {{ 'selected' if pc == '+55' else '' }}>+55</option>
+                <option value="+52" {{ 'selected' if pc == '+52' else '' }}>+52</option>
+                <option value="+34" {{ 'selected' if pc == '+34' else '' }}>+34</option>
+                <option value="+39" {{ 'selected' if pc == '+39' else '' }}>+39</option>
+                <option value="+31" {{ 'selected' if pc == '+31' else '' }}>+31</option>
+                <option value="+65" {{ 'selected' if pc == '+65' else '' }}>+65</option>
+                <option value="+971" {{ 'selected' if pc == '+971' else '' }}>+971</option>
+              </select>
+              <input type="tel" id="contact-phone" placeholder="234 567 8900" style="flex: 1;" value="{{ c.get('phone', '') }}" autocomplete="tel">
+          </div>
+          </div>
+          <div class="form-group">
+            <label for="contact-email">Email</label>
+            <input type="email" id="contact-email" placeholder="john@example.com" value="{{ c.get('email', '') }}" autocomplete="email">
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="contact-country">Country</label>
+            <input type="text" id="contact-country" placeholder="United States" value="{{ c.get('country', '') }}" autocomplete="country-name">
+          </div>
+          <div class="form-group">
+            <label for="contact-city">City</label>
+            <input type="text" id="contact-city" placeholder="City" value="{{ c.get('city', '') }}" autocomplete="address-level2">
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="contact-address">Address</label>
+            <input type="text" id="contact-address" placeholder="Street address" value="{{ c.get('address', '') }}" autocomplete="street-address">
+          </div>
+          <div class="form-group">
+            <label for="contact-postCode">Post code</label>
+            <input type="text" id="contact-postCode" placeholder="Postal / ZIP code" value="{{ c.get('postCode', '') }}" autocomplete="postal-code">
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="contact-linkedin">LinkedIn URL</label>
+            <input type="url" id="contact-linkedin" placeholder="https://linkedin.com/in/username" value="{{ c.get('linkedin', '') }}">
+          </div>
+          <div class="form-group">
+            <label for="contact-website">Website</label>
+            <input type="url" id="contact-website" placeholder="https://yourwebsite.com" value="{{ c.get('website', '') }}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="contact-additional">Additional information</label>
+          <textarea id="contact-additional" rows="2" placeholder="Any other contact details">{{ c.get('additional', '') }}</textarea>
+        </div>
+      </section>
+
+      <!-- Step 1: Experience -->
+      <section class="editor-section" data-step="1">
+        <h2>Experience</h2>
+        <details class="tips-box">
+          <summary>Experience tips</summary>
+          <ul>
+            <li class="do">Use action verbs like "led", "improved", or "created."</li>
+            <li class="do">Use bullet points for concise achievements.</li>
+            <li class="do">Keep descriptions short and clear (1–2 lines per bullet).</li>
+            <li class="do">Highlight accomplishments, not generic duties.</li>
+            <li class="do">Add numbers when possible.</li>
+            <li class="dont">Don't abbreviate job titles.</li>
+            <li class="dont">Don't use "I" or full sentences.</li>
+            <li class="dont">List most recent position first.</li>
+          </ul>
+        </details>
+        <div id="experience-list">
+          {% for exp in (initial_resume_data or {}).get('experience', []) %}
+          <div class="array-item" data-idx="{{ loop.index0 }}">
+            <div class="array-item-header">
+              <span>{{ exp.get('role') or exp.get('jobTitle') or 'New position' }}, {{ exp.get('company') or exp.get('employer') or 'Company' }}</span>
+              <button type="button" class="btn-remove" data-remove-exp="{{ loop.index0 }}">Remove</button>
+            </div>
+            <div class="form-group">
+              <label for="exp-role-{{ loop.index0 }}">Job title</label>
+              <input type="text" id="exp-role-{{ loop.index0 }}" value="{{ (exp.get('role') or exp.get('jobTitle') or '')|e }}" placeholder="e.g. Software Engineer">
+            </div>
+            <div class="form-group">
+              <label for="exp-company-{{ loop.index0 }}">Employer</label>
+              <input type="text" id="exp-company-{{ loop.index0 }}" value="{{ (exp.get('company') or exp.get('employer') or '')|e }}" placeholder="Company name">
+            </div>
+            <div class="form-group">
+              <label for="exp-location-{{ loop.index0 }}">Location</label>
+              <input type="text" id="exp-location-{{ loop.index0 }}" value="{{ (exp.get('location') or '')|e }}" placeholder="City, Country">
+            </div>
+            <div style="display: flex; gap: 1rem;">
+              <div class="form-group" style="flex: 1;">
+                <label for="exp-startDate-{{ loop.index0 }}">Start date</label>
+                <input type="text" id="exp-startDate-{{ loop.index0 }}" value="{{ (exp.get('startDate') or '')|e }}" placeholder="MM/YYYY">
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="exp-endDate-{{ loop.index0 }}">End date</label>
+                <input type="text" id="exp-endDate-{{ loop.index0 }}" value="{{ (exp.get('endDate') or exp.get('dates') or '')|e }}" placeholder="MM/YYYY or Present">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="exp-desc-{{ loop.index0 }}">Description</label>
+              <textarea id="exp-desc-{{ loop.index0 }}" rows="4" placeholder="Key responsibilities and achievements">{{ (exp.get('description') or '')|e }}</textarea>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="btn-add" id="add-experience">Add work experience</button>
+      </section>
+
+      <!-- Step 2: Education -->
+      <section class="editor-section" data-step="2">
+        <h2>Education</h2>
+        <details class="tips-box">
+          <summary>Education tips</summary>
+          <ul>
+            <li class="do">List most recent education first.</li>
+            <li class="do">Spell out acronyms (e.g. "Bachelor of Science (B.S.)").</li>
+            <li class="do">Include incomplete education if relevant.</li>
+            <li class="do">Include GPA if strong (3.5+).</li>
+            <li class="dont">Don't include high school unless it's your highest level.</li>
+            <li class="dont">Use official school names.</li>
+          </ul>
+        </details>
+        <div id="education-list">
+          {% for edu in (initial_resume_data or {}).get('education', []) %}
+          <div class="array-item" data-idx="{{ loop.index0 }}">
+            <div class="array-item-header">
+              <span>{{ edu.get('school') or 'School' }}, {{ edu.get('degree') or 'Degree' }}</span>
+              <button type="button" class="btn-remove" data-remove-edu="{{ loop.index0 }}">Remove</button>
+            </div>
+            <div class="form-group">
+              <label for="edu-school-{{ loop.index0 }}">School</label>
+              <input type="text" id="edu-school-{{ loop.index0 }}" value="{{ (edu.get('school') or '')|e }}" placeholder="School name">
+            </div>
+            <div class="form-group">
+              <label for="edu-degree-{{ loop.index0 }}">Degree</label>
+              <input type="text" id="edu-degree-{{ loop.index0 }}" value="{{ (edu.get('degree') or '')|e }}" placeholder="Degree or certification">
+            </div>
+            <div class="form-group">
+              <label for="edu-dates-{{ loop.index0 }}">Dates</label>
+              <input type="text" id="edu-dates-{{ loop.index0 }}" value="{{ (edu.get('dates') or edu.get('startDate') or edu.get('endDate') or '')|e }}" placeholder="e.g. 2015–2019">
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="btn-add" id="add-education">Add education</button>
+      </section>
+
+      <!-- Step 3: Skills -->
+      <section class="editor-section" data-step="3">
+        <h2>Skills</h2>
+        <details class="tips-box">
+          <summary>Skills tips</summary>
+          <ul>
+            <li class="do">List job-relevant skills.</li>
+            <li class="do">Use keywords from job description.</li>
+            <li class="do">Keep it concise (4–5 strongest skills).</li>
+            <li class="dont">Don't include outdated tools.</li>
+            <li class="dont">Don't list general traits as skills.</li>
+          </ul>
+        </details>
+        <div class="form-group">
+          <label for="skills-input">Add your most relevant professional skills (press Enter or comma)</label>
+          <div class="tag-input-wrap" id="skills-wrap">
+            {% for skill in (initial_resume_data or {}).get('skills', []) %}
+            <span class="tag">{{ skill|e }} <span class="tag-remove" data-skill-remove="{{ loop.index0 }}">×</span></span>
+            {% endfor %}
+            <input type="text" id="skills-input" placeholder="Type a skill">
+          </div>
+        </div>
+        <div class="form-group" style="margin-top: 0.5rem;">
+          <span style="font-size: 0.85rem; color: var(--text-muted);">Suggested: </span>
+          <span id="suggested-skills" style="font-size: 0.85rem;"></span>
+        </div>
+      </section>
+
+      <!-- Step 4: Summary -->
+      <section class="editor-section" data-step="4">
+        <h2>Summary</h2>
+        <details class="tips-box">
+          <summary>Summary tips</summary>
+          <ul>
+            <li class="do">Start with your role or field.</li>
+            <li class="do">Highlight 2–3 key strengths.</li>
+            <li class="do">Add a career goal.</li>
+            <li class="dont">Don't copy your experience section.</li>
+            <li class="dont">Don't be too general.</li>
+          </ul>
+        </details>
+        <p class="section-intro">Write a short introduction that highlights your experience, key skills, and career goals.</p>
+        <div class="form-group">
+          <label for="summary">Summary</label>
+          <textarea id="summary" rows="8" placeholder="e.g. Solutions Architect with 17+ years in IT, passionate about designing scalable systems...">{{ (initial_resume_data or {}).get('summary', '') }}</textarea>
+        </div>
+      </section>
+
+      <!-- Step 5: Additional -->
+      <section class="editor-section" data-step="5">
+        <h2>Additional Sections</h2>
+        <p class="section-intro">Add certifications, languages, awards, or any extra details you want recruiters to see.</p>
+        <div class="form-group">
+          <label for="certifications">Certifications</label>
+          <textarea id="certifications" rows="3" placeholder="e.g. AWS Certified Solutions Architect · PMP · ...">{{ (initial_resume_data or {}).get('certifications', '') }}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Languages</label>
+          <div id="languages-list"></div>
+          <button type="button" class="btn-add" id="add-language" style="margin-top: 0.5rem">Add language</button>
+        </div>
+        <div class="form-group">
+          <label for="awards">Awards</label>
+          <textarea id="awards" rows="2" placeholder="Awards or recognitions">{{ (initial_resume_data or {}).get('awards', '') }}</textarea>
+        </div>
+      </section>
+
+      <div class="step-nav-buttons">
+        <button type="button" class="btn-prev" id="btn-prev">← Back</button>
+        <button type="button" class="btn-next" id="btn-next">Next →</button>
+      </div>
+    </main>
+    </div>
+
+    <aside class="right-pane">
+      <div class="preview-header">
+        <div class="resume-score">
+          <span class="score-value" id="resume-score">0%</span>
+          <span class="score-label">Your resume score</span>
+          <span class="score-emoji">🔥</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <a href="/template-editor" class="btn-change-template-stylish" id="btn-template">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Change Template
+          </a>
+          <button type="button" class="export-btn secondary" id="btn-save" style="display:none;"></button>
+        </div>
+      </div>
+      <div class="preview-viewport" id="preview-viewport">
+        <div class="preview-page-wrapper" id="preview-page-wrapper">
+          <div class="preview-page-frame" id="preview-page-frame">
+            <div class="preview-paper" id="preview-paper"></div>
+          </div>
+          <div class="preview-pagination-overlay" id="preview-pagination-overlay">
+            <button type="button" id="prev-page" title="Previous page">‹</button>
+            <span id="page-info">1 / 1</span>
+            <button type="button" id="next-page" title="Next page">›</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+    </div>
+  </div>
+
+  <!-- html2pdf.js not loaded here — avoids CSP eval block; PDF export uses template-editor -->
+  <script type="application/json" id="initial-resume-data">{{ (initial_resume_data or {}) | tojson }}</script>
+  <script type="application/json" id="editor-flags">{{ {"start_blank": start_blank|default(False)} | tojson }}</script>
+  <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+</body>
+</html>

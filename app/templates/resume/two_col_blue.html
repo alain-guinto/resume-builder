@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  {% from "resume/_macros.html" import edu_list, skill_tags, lang_list, exp_dot %}
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    @page { margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; font-size: 10pt; line-height: 1.55; }
+    .wrap { display: flex; min-height: 297mm; }
+    .side { width: 32%; background: #1e40af; color: #fff; padding: 2rem 1.25rem; }
+    .main { flex: 1; background: #f8fafc; padding: 2rem 1.75rem; border-left: 1px solid #e2e8f0; border-top: 4px solid #3b82f6; }
+    .side-title { font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:3px;margin:0 0 8px; margin-top: 0.85rem; }
+    .side-item { font-size: 8.5pt; color: #fff; opacity: 0.85; margin-bottom: 4px; }
+    .main-title { font-size: 9.5pt; font-weight: 700; border-bottom: 1px solid #e2e8f0; padding-bottom: 3px; margin: 0 0 0.75rem; color: #1e293b; }
+    .exp-item { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .exp-dot { flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="side">
+
+      <h1 style="font-size:14pt;font-weight:700;color:#fff;margin:0 0 3px;">{{ contacts.name }}</h1>
+      <p style="font-size:9pt;color:#fff;opacity:0.7;margin-bottom:1rem;">{{ contacts.jobTitle }}</p>
+      <div style="height:2px;background:rgba(255,255,255,0.15);margin-bottom:1rem;"></div>
+      <h2 class="side-title" style="margin-top:0;">Contact</h2>
+      {% if contacts.email %}<div class="side-item">{{ contacts.email }}</div>{% endif %}
+      {% if contacts.phone %}<div class="side-item">{{ contacts.phoneCode or '' }} {{ contacts.phone }}</div>{% endif %}
+      {% if contacts.city or contacts.country %}<div class="side-item" style="margin-bottom:1rem;">{{ [contacts.city,contacts.country]|select|join(', ') }}</div>{% endif %}
+      {% if education %}<h2 class="side-title">Education</h2>
+        {% for e in education %}<div style="margin-bottom:.5rem;"><div style="font-size:8.5pt;font-weight:700;color:#fff;">{{ e.degree }}</div><div style="font-size:8pt;color:#fff;opacity:.7;">{{ e.school }}</div><div style="font-size:7.5pt;color:#fff;opacity:.5;">{{ e.dates }}</div></div>{% endfor %}
+      {% endif %}
+      {% if skills %}<h2 class="side-title">Skills</h2>
+        {% for s in skills %}<div class="side-item">• {{ s }}</div>{% endfor %}
+      {% endif %}
+      {% if languages %}<h2 class="side-title">Languages</h2>
+        {% for l in languages %}<div style="display:flex;justify-content:space-between;font-size:8.5pt;color:#fff;margin-bottom:4px;"><span>{{ l.name }}</span><span>{{ '●' * l.level }}{{ '○' * (5-l.level) }}</span></div>{% endfor %}
+      {% endif %}
+      {% if certifications %}<h2 class="side-title">Certifications</h2><p style="font-size:8pt;color:#fff;opacity:.8;">{{ certifications }}</p>{% endif %}
+    </div>
+    <div class="main">
+      <h1 style="font-size:22pt;font-weight:700;color:#1e293b;margin:0;">{{ contacts.name }}</h1>
+      <p style="font-size:11pt;color:#64748b;margin:4px 0 1rem;">{{ contacts.jobTitle }}</p>
+      {% if summary %}<p style="font-size:9pt;color:#64748b;margin-bottom:1.25rem;">{{ summary }}</p>{% endif %}
+      {% if experience %}
+      <h2 class="main-title">Experience</h2>
+      {% for e in experience %}
+        <div class="exp-item">
+          <div class="exp-dot"></div>
+          <div>
+            <div style="font-size:7.5pt;color:#94a3b8;">{{ e.dates }}</div>
+            <strong style="font-size:9pt;color:#1a1a1a;">{{ e.role }}</strong>
+            <div style="font-size:8.5pt;color:#64748b;">{{ e.company }}</div>
+            <p style="font-size:8pt;color:#555;margin:2px 0 0;line-height:1.4;">{{ e.description }}</p>
+          </div>
+        </div>
+      {% endfor %}
+      {% endif %}
+      {% if awards %}<h2 class="main-title" style="margin-top:1rem;">Awards</h2><p style="font-size:9pt;color:#555;">{{ awards }}</p>{% endif %}
+    </div>
+  </div>
+</body>
+</html>

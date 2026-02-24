@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start Your Resume — ResumeForge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+  <style>
+    .upload-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; background: linear-gradient(180deg, #f8fafc 0%, #fff 100%); }
+    .upload-page-card { background: #fff; border-radius: 20px; padding: 2.5rem; max-width: 480px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; }
+    .upload-page-back { display: inline-flex; align-items: center; gap: 0.5rem; color: #64748b; text-decoration: none; font-size: 0.9rem; font-weight: 500; margin-bottom: 1.5rem; }
+    .upload-page-back:hover { color: var(--rf-primary); }
+    .upload-page-title { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; }
+    .upload-page-sub { font-size: 0.95rem; color: #64748b; margin-bottom: 1.75rem; }
+    .upload-choice-question { font-size: 1rem; font-weight: 600; color: #334155; margin-bottom: 1.25rem; }
+    .upload-choice-btns { display: flex; flex-direction: column; gap: 1rem; }
+    .upload-choice-btn { display: flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; padding: 1rem 1.5rem; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; text-decoration: none; border: 2px solid transparent; }
+    .upload-choice-btn-upload { background: var(--rf-primary); color: #fff; border-color: var(--rf-primary); }
+    .upload-choice-btn-upload:hover { background: var(--rf-primary-hover); border-color: var(--rf-primary-hover); }
+    .upload-choice-btn-blank { background: #fff; color: #475569; border-color: #e2e8f0; }
+    .upload-choice-btn-blank:hover { border-color: var(--rf-primary); color: var(--rf-primary); }
+    .upload-choice-btn svg { flex-shrink: 0; }
+    .validation-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .validation-modal.open { opacity: 1; pointer-events: all; }
+    .validation-modal-content { background: #fff; border-radius: 16px; padding: 1.5rem 2rem; max-width: 360px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .validation-modal-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; }
+    .validation-modal-text { font-size: 0.95rem; color: #64748b; margin-bottom: 1.25rem; line-height: 1.5; }
+    .validation-modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+    .validation-modal-btn { padding: 0.5rem 1.25rem; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; border: none; transition: background 0.15s; }
+    .validation-modal-btn-cancel { background: #f1f5f9; color: #475569; }
+    .validation-modal-btn-cancel:hover { background: #e2e8f0; }
+    .validation-modal-btn-confirm { background: var(--rf-primary); color: #fff; }
+    .validation-modal-btn-confirm:hover { background: var(--rf-primary-hover); }
+  </style>
+</head>
+<body>
+  <div class="upload-page">
+    <div class="upload-page-card">
+      <a href="/templates" class="upload-page-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to templates
+      </a>
+      <h1 class="upload-page-title">Start Your Resume</h1>
+      <p class="upload-page-sub">How would you like to get started?</p>
+      <p class="upload-choice-question">Choose one option:</p>
+      <div class="upload-choice-btns">
+        <button type="button" class="upload-choice-btn upload-choice-btn-upload" id="btn-upload-resume">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload Resume
+        </button>
+        <button type="button" class="upload-choice-btn upload-choice-btn-blank" id="btn-start-blank">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Start with a blank resume
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation modal for Upload Resume -->
+  <div class="validation-modal" id="modal-upload">
+    <div class="validation-modal-content">
+      <div class="validation-modal-title">Upload your resume?</div>
+      <p class="validation-modal-text">You'll be taken to a page where you can upload from your computer, Google Drive, or Dropbox. We'll extract your details to pre-fill the editor.</p>
+      <div class="validation-modal-actions">
+        <button type="button" class="validation-modal-btn validation-modal-btn-cancel" data-close="modal-upload">Cancel</button>
+        <button type="button" class="validation-modal-btn validation-modal-btn-confirm" id="confirm-upload">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation modal for Start blank -->
+  <div class="validation-modal" id="modal-blank">
+    <div class="validation-modal-content">
+      <div class="validation-modal-title">Start with a blank resume?</div>
+      <p class="validation-modal-text">You'll begin with an empty resume and add your details manually. You can always upload a file later from the editor.</p>
+      <div class="validation-modal-actions">
+        <button type="button" class="validation-modal-btn validation-modal-btn-cancel" data-close="modal-blank">Cancel</button>
+        <button type="button" class="validation-modal-btn validation-modal-btn-confirm" id="confirm-blank">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+</body>
+</html>

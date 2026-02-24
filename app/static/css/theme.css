@@ -1,0 +1,42 @@
+/* ── ResumeForge shared theme: trust & hope palette ────────────────────────── */
+/* Skip link (accessibility) - visible on focus for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.75rem 1.25rem;
+  background: var(--rf-primary);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 1rem;
+  outline: 3px solid var(--rf-accent);
+  outline-offset: 2px;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:root {
+  --rf-primary: #0284C7;
+  --rf-primary-hover: #0369A1;
+  --rf-primary-light: #E0F2FE;
+  --rf-accent: #0D9488;
+  --rf-accent-hover: #0F766E;
+  --rf-bg: #EFF6FF;
+  --rf-surface: #fff;
+  --rf-muted: #64748b;
+  --rf-border: #e2e8f0;
+  --rf-text: #1e293b;
+  --rf-dark: #0f172a;
+}

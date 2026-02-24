@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+    @page { margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; font-size: 10pt; line-height: 1.55; color: #1e293b; margin: 0; padding: 0; }
+    .resume-content { display: flex; min-height: 297mm; }
+    .left-column { width: 32%; background: #334155; color: #fff; padding: 2rem 1.5rem; }
+    .right-column { width: 68%; background: #f8fafc; padding: 2rem 2.5rem; border-left: 1px solid #e2e8f0; }
+    .photo-placeholder { width: 160px; height: 160px; background: #475569; margin: 0 auto 1.5rem; border: 2px solid #64748b; overflow: hidden; display: block; }
+    .section-title { font-size: 10pt; font-weight: 700; margin-bottom: 0.5rem; padding-bottom: 0.35rem; border-bottom: 1px solid #475569; color: #fff; }
+    .section-title-light { font-size: 10pt; font-weight: 700; margin-bottom: 0.75rem; padding-bottom: 0.35rem; border-bottom: 1px solid #cbd5e1; color: #1e293b; }
+    .contact-label { font-size: 8pt; color: #94a3b8; margin-bottom: 0.2rem; }
+    .contact-value { font-size: 9pt; color: #fff; margin-bottom: 0.6rem; }
+    .edu-date { font-size: 8.5pt; color: #94a3b8; margin-bottom: 0.2rem; }
+    .edu-degree { font-weight: 700; font-size: 9pt; color: #fff; }
+    .edu-school { font-size: 9pt; color: #cbd5e1; }
+    .name { font-size: 22pt; font-weight: 700; margin-bottom: 0.25rem; color: #1e293b; }
+    .job-title { font-size: 11pt; color: #64748b; margin-bottom: 1.25rem; }
+    .exp-timeline-dot { width: 8px; height: 8px; border-radius: 50%; background: #475569; margin-top: 0.4rem; flex-shrink: 0; }
+    .exp-date { font-size: 8.5pt; color: #64748b; margin-bottom: 0.2rem; }
+    .exp-company { font-size: 9pt; color: #1a1a1a; margin-bottom: 0.15rem; }
+    .exp-role { font-weight: 700; font-size: 9pt; color: #1a1a1a; margin-bottom: 0.35rem; }
+    .exp-desc { font-size: 8.5pt; color: #64748b; line-height: 1.5; }
+    .skill-item { font-size: 9pt; color: #e2e8f0; margin-bottom: 0.35rem; }
+  </style>
+</head>
+<body>
+  <div class="resume-content">
+    <div class="left-column">
+      {% if contacts.photoUrl %}<img src="{{ contacts.photoUrl }}" alt="" class="photo-placeholder" style="object-fit:cover;">{% else %}<div class="photo-placeholder"></div>{% endif %}
+      <h2 class="section-title">Contact</h2>
+      {% if contacts.phone %}<div><span class="contact-label">Phone</span><div class="contact-value">{{ contacts.phoneCode or '' }} {{ contacts.phone }}</div></div>{% endif %}
+      {% if contacts.email %}<div><span class="contact-label">Email</span><div class="contact-value">{{ contacts.email }}</div></div>{% endif %}
+      {% if contacts.address or contacts.location %}<div><span class="contact-label">Address</span><div class="contact-value">{{ contacts.address or contacts.location }}</div></div>{% endif %}
+      {% if education %}
+      <h2 class="section-title" style="margin-top:1.25rem;">Education</h2>
+      {% for edu in education %}
+      <div style="margin-bottom:1rem;">
+        <div class="edu-date">{{ edu.dates }}</div>
+        <div class="edu-degree">{{ edu.degree }}</div>
+        <div class="edu-school">{{ edu.school }}</div>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% if skills %}
+      <h2 class="section-title" style="margin-top:1.25rem;">Expertise</h2>
+      <ul style="list-style:none;padding:0;margin:0;">
+        {% for skill in skills %}<li class="skill-item">• {{ skill }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+      {% if languages %}
+      <h2 class="section-title" style="margin-top:1.25rem;">Language</h2>
+      <div class="skill-item">{% for lang in languages %}{{ lang.name }}{% if not loop.last %}, {% endif %}{% endfor %}</div>
+      {% endif %}
+    </div>
+    <div class="right-column">
+      <h1 class="name">{{ contacts.name }}</h1>
+      <p class="job-title">{{ contacts.jobTitle }}</p>
+      {% if summary %}<p style="font-size:9pt;color:#64748b;line-height:1.6;margin-bottom:1.5rem;">{{ summary }}</p>{% endif %}
+      <h2 class="section-title-light">Experience</h2>
+      {% for exp in experience %}
+      <div style="display:flex;gap:0.75rem;margin-bottom:1.25rem;">
+        <div class="exp-timeline-dot"></div>
+        <div style="flex:1;">
+          <div class="exp-date">{{ exp.dates }}</div>
+          <div class="exp-company">{{ exp.company }}{% if exp.location %} | {{ exp.location }}{% endif %}</div>
+          <div class="exp-role">{{ exp.role }}</div>
+          <p class="exp-desc">{{ exp.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+      <h2 class="section-title-light" style="margin-top:1.5rem;">Reference</h2>
+      <p class="exp-desc">{{ additional or 'Available upon request' }}</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+{
+  "additional": "",
+  "awards": "",
+  "certifications": "",
+  "contacts": {
+    "city": "Mandaluyong",
+    "country": "Philippines",
+    "email": "alain.guinto@yahoo.com",
+    "firstName": "Alain",
+    "jobTitle": "Solutions Architect",
+    "lastName": "Guinto",
+    "name": "Alain Guinto",
+    "phoneCode": "+1"
+  },
+  "education": [],
+  "experience": [
+    {
+      "company": "Data Engineering - Manager — GCash",
+      "dates": "Aug 2024",
+      "description": "",
+      "endDate": "",
+      "role": "Designing scalable, resilient, and business-driven systems.",
+      "startDate": "Aug 2024"
+    },
+    {
+      "company": "Data and Analytics Developer — Volt Bank",
+      "dates": "Oct 2022 – Mar 2025",
+      "description": "",
+      "endDate": "Mar 2025",
+      "role": "Led data engineering initiatives and team delivery for GCash's data platform.",
+      "startDate": "Oct 2022"
+    },
+    {
+      "company": "Team Lead - Teradata Database Administrator — Teradata, Philippines",
+      "dates": "Oct 2019 – Aug 2022",
+      "description": "",
+      "endDate": "Aug 2022",
+      "role": "Developed data and analytics solutions for financial services.",
+      "startDate": "Oct 2019"
+    },
+    {
+      "company": "Team Lead - Production Support — Teradata",
+      "dates": "Jul 2018 – Sep 2019",
+      "description": "",
+      "endDate": "Sep 2019",
+      "role": "Managed services offshore project with Delta Airlines.",
+      "startDate": "Jul 2018"
+    },
+    {
+      "company": "Production Support Specialist — Teradata",
+      "dates": "Mar 2016 – Jul 2018",
+      "description": "",
+      "endDate": "Jul 2018",
+      "role": "Onshore project with Standard Chartered Bank.",
+      "startDate": "Mar 2016"
+    },
+    {
+      "company": "ETL Developer — Teradata",
+      "dates": "Oct 2014 – Feb 2016",
+      "description": "",
+      "endDate": "Feb 2016",
+      "role": "Onshore project with Standard Chartered Bank.",
+      "startDate": "Oct 2014"
+    },
+    {
+      "company": "Production Support Specialist — Teradata",
+      "dates": "Apr 2014 – Sep 2014",
+      "description": "",
+      "endDate": "Sep 2014",
+      "role": "Offshore project with Standard Chartered Bank. Built ETL scripts including packaging, testing, and production deployment.",
+      "startDate": "Apr 2014"
+    },
+    {
+      "company": "Applications Developer II — Federal Phoenix Assurance Co., Inc.",
+      "dates": "Jun 2012 – Mar 2014",
+      "description": "",
+      "endDate": "Mar 2014",
+      "role": "Onsite project with Globe Telecom. Ad-hoc queries, data loading, and report building.",
+      "startDate": "Jun 2012"
+    },
+    {
+      "company": "Applications Developer — Transcom",
+      "dates": "Sep 2011 – Dec 2011",
+      "description": "",
+      "endDate": "Dec 2011",
+      "role": "Report development and system maintenance.",
+      "startDate": "Sep 2011"
+    },
+    {
+      "company": "",
+      "dates": "Jun 2008 – Aug 2011",
+      "description": "",
+      "endDate": "Aug 2011",
+      "role": "Application maintenance, scripting, and report building.",
+      "startDate": "Jun 2008"
+    }
+  ],
+  "languages": [],
+  "skills": [
+    "Cloud Security",
+    "Application Security",
+    "Reliability Engineering",
+    "Solutions Architecture",
+    "Data Engineering",
+    "Prompt Engineering",
+    "AI-Assisted Development",
+    "LLM Integration",
+    "Generative AI"
+  ],
+  "summary": "Solutions Architect at GCash with 17+ years in IT, passionate about designing scalable, resilient, and business-driven systems that turn complex problems into elegant solutions. Started as a developer and evolved through roles as database administrator, ETL developer, data & analytics developer, and data engineer. Focus on bridging strategy with execution, collaboration, and clear communication. Experience spans Financial Services, Telecommunications, BPO, Logistics, and FinTech. Driven by curiosity, problem-solving, and the belief that the right architecture unlocks innovation at scale.",
+  "template": "minimal"
+}

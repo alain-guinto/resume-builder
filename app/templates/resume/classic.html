@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    @page { margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; font-size: 10pt; line-height: 1.5; color: #1a1a1a; margin: 0; padding: 0; background: #f0f0f0; }
+    .resume-content { display: flex; min-height: 297mm; }
+    .left-column { width: 35%; background: #fff; padding: 2rem 1.5rem; margin: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .right-column { width: 65%; padding: 2rem 2.5rem; background: #fff; margin: 1.5rem 1.5rem 1.5rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .photo-placeholder { width: 160px; height: 160px; background: #e5e7eb; margin: 0 auto 1.25rem; overflow: hidden; display: block; }
+    .name { font-size: 16pt; font-weight: 700; margin-bottom: 0.25rem; color: #1a1a1a; }
+    .job-title { font-size: 9.5pt; color: #666; margin-bottom: 1.5rem; }
+    .section-title { font-size: 10pt; font-weight: 700; margin-bottom: 0.6rem; padding-bottom: 0.35rem; border-bottom: 1px solid #ddd; color: #1a1a1a; }
+    .section { margin-bottom: 1.25rem; }
+    .contact-label { font-size: 9pt; color: #555; margin-bottom: 0.35rem; }
+    .contact-value { font-size: 9pt; color: #1a1a1a; margin-bottom: 0.75rem; }
+    .skills-list { list-style: none; }
+    .skills-list li { font-size: 9.5pt; color: #1a1a1a; margin-bottom: 0.35rem; padding-left: 0; }
+    .edu-degree { font-weight: 700; font-size: 9.5pt; color: #1a1a1a; }
+    .edu-school { font-size: 9pt; color: #555; margin-bottom: 0.35rem; }
+    .edu-dates { font-size: 9pt; color: #666; }
+    .exp-role { font-weight: 700; font-size: 9.5pt; color: #1a1a1a; }
+    .exp-company { font-size: 9pt; color: #555; margin-bottom: 0.35rem; }
+    .exp-dates { font-size: 9pt; color: #666; }
+    .exp-desc { font-size: 8.5pt; color: #666; line-height: 1.4; }
+  </style>
+</head>
+<body>
+  <div class="resume-content">
+    <div class="left-column">
+      {% if contacts.photoUrl %}<img src="{{ contacts.photoUrl }}" alt="" class="photo-placeholder" style="object-fit:cover;">{% else %}<div class="photo-placeholder"></div>{% endif %}
+      <h1 class="name">{{ contacts.name }}</h1>
+      <p class="job-title">{{ contacts.jobTitle }}</p>
+      <section class="section">
+        <h2 class="section-title">Contact</h2>
+        {% if contacts.phone %}<div class="contact-label">Phone</div><div class="contact-value">{{ contacts.phoneCode or '' }} {{ contacts.phone }}</div>{% endif %}
+        {% if contacts.email %}<div class="contact-label">Email</div><div class="contact-value">{{ contacts.email }}</div>{% endif %}
+        {% if contacts.address or contacts.location %}<div class="contact-label">Address</div><div class="contact-value">{{ contacts.address or contacts.location }}</div>{% endif %}
+      </section>
+      {% if summary %}
+      <section class="section">
+        <h2 class="section-title">About Me</h2>
+        <p style="font-size:9pt;color:#555;line-height:1.5;">{{ summary }}</p>
+      </section>
+      {% endif %}
+      {% if skills %}
+      <section class="section">
+        <h2 class="section-title">Skills</h2>
+        <ul class="skills-list">
+          {% for skill in skills %}<li>{{ skill }}</li>{% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+      {% if languages %}
+      <section class="section">
+        <h2 class="section-title">Language</h2>
+        <ul class="skills-list">
+          {% for lang in languages %}<li>{{ lang.name }}</li>{% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+    </div>
+    <div class="right-column">
+      {% if education %}
+      <section class="section">
+        <h2 class="section-title">Education</h2>
+        {% for edu in education %}
+        <div style="margin-bottom:1.25rem;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.25rem;">
+            <span class="edu-degree">{{ edu.degree }}</span>
+            <span class="edu-dates">{{ edu.dates }}</span>
+          </div>
+          <div class="edu-school">{{ edu.school }}</div>
+          {% if edu.description %}<p class="exp-desc">{{ edu.description }}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </section>
+      {% endif %}
+      <section class="section">
+        <h2 class="section-title">Experience</h2>
+        {% for exp in experience %}
+        <div style="margin-bottom:1.25rem;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.25rem;">
+            <span class="exp-role">{{ exp.role }}</span>
+            <span class="exp-dates">{{ exp.dates }}</span>
+          </div>
+          <div class="exp-company">{{ exp.company }}{% if exp.location %} / {{ exp.location }}{% endif %}</div>
+          <p class="exp-desc">{{ exp.description }}</p>
+        </div>
+        {% endfor %}
+      </section>
+      {% if certifications %}
+      <section class="section">
+        <h2 class="section-title">Certifications</h2>
+        <p class="exp-desc">{{ certifications }}</p>
+      </section>
+      {% endif %}
+      <section class="section">
+        <h2 class="section-title">References</h2>
+        <p class="exp-desc">{{ additional or 'Available upon request' }}</p>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  {% from "resume/_macros.html" import contact_row, edu_list, skill_tags, lang_list %}
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    @page { margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; font-size: 10pt; line-height: 1.55; color: #1a1a1a; background: #fff; }
+    .page { min-height: 297mm; padding: 2rem; }
+    .banner { background: #7c3aed15; border-left: 4px solid #7c3aed; padding: 1rem 1.25rem; margin-bottom: 1.5rem; border-radius: 0 8px 8px 0; }
+    .sec { margin-bottom: 1.1rem; }
+    .sec-title { font-size: 9pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #7c3aed; margin: 0 0 0.75rem; }
+    .tl-item { display: flex; gap: 1rem; margin-bottom: 1.25rem; }
+    .tl-left { display: flex; flex-direction: column; align-items: center; width: 16px; flex-shrink: 0; }
+    .tl-dot { width: 12px; height: 12px; border-radius: 50%; background: #7c3aed; border: 2px solid #7c3aed; flex-shrink: 0; }
+    .tl-line { flex: 1; width: 2px; background: #e2e8f0; min-height: 40px; margin-top: 2px; }
+    .date-badge { font-size: 7.5pt; color: #7c3aed; font-weight: 600; background: #7c3aed15; padding: 1px 6px; border-radius: 999px; white-space: nowrap; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="banner">
+      <h1 style="font-size:20pt;font-weight:800;color:#7c3aed;margin:0;">{{ contacts.name }}</h1>
+      <p style="font-size:10pt;color:#64748b;margin:3px 0 6px;">{{ contacts.jobTitle }}</p>
+      <div>{{ contact_row(contacts,' · ','#94a3b8') }}</div>
+    </div>
+    {% if summary %}<p style="font-size:9pt;color:#555;margin-bottom:1.5rem;">{{ summary }}</p>{% endif %}
+    {% if experience %}
+    <div class="sec">
+      <div class="sec-title">Experience</div>
+      {% for e in experience %}
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot"></div>
+          <div class="tl-line"></div>
+        </div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1px;">
+            <strong style="font-size:9pt;">{{ e.role }}</strong>
+            <span class="date-badge">{{ e.dates }}</span>
+          </div>
+          <div style="font-size:8.5pt;color:#64748b;margin-bottom:2px;">{{ e.company }}</div>
+          <p style="font-size:8pt;color:#555;line-height:1.4;margin:0;">{{ e.description }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="two-col">
+      <div>
+        {% if education %}
+        <div class="sec">
+          <div class="sec-title">Education</div>
+          {{ edu_list(education) }}
+        </div>
+        {% endif %}
+        {% if certifications %}
+        <div class="sec">
+          <div class="sec-title">Certifications</div>
+          <p style="font-size:9pt;color:#555;">{{ certifications }}</p>
+        </div>
+        {% endif %}
+      </div>
+      <div>
+        {% if skills %}
+        <div class="sec">
+          <div class="sec-title">Skills</div>
+          {{ skill_tags(skills,'#7c3aed15','#7c3aed') }}
+        </div>
+        {% endif %}
+        {% if languages %}
+        <div class="sec">
+          <div class="sec-title">Languages</div>
+          {{ lang_list(languages,'#7c3aed') }}
+        </div>
+        {% endif %}
+        {% if awards %}
+        <div class="sec">
+          <div class="sec-title">Awards</div>
+          <p style="font-size:9pt;color:#555;">{{ awards }}</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

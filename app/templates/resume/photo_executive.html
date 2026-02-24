@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  {% from "resume/_macros.html" import contact_row, photo_box, exp_list, edu_list, skill_tags, lang_list, sec_title %}
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    @page { margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; font-size: 10pt; line-height: 1.55; color: #1a1a1a; background: #fff; }
+    .page { min-height: 297mm; padding: 2rem; }
+    .header { display: flex; gap: 1.25rem; align-items: flex-start; border-bottom: 2px solid #1e3a8a; padding-bottom: 1rem; margin-bottom: 1.25rem; }
+    .sec { margin-bottom: 1.1rem; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      {{ photo_box(contacts.photoUrl, 90, '4px', 'flex-shrink:0;border:1px solid #e2e8f0;') }}
+      <div style="flex:1;padding-top:4px;">
+        <h1 style="font-size:20pt;font-weight:700;color:#1e3a8a;margin:0;">{{ contacts.name }}</h1>
+        <p style="font-size:10.5pt;color:#6b7280;margin:4px 0 8px;">{{ contacts.jobTitle }}</p>
+        <div>{{ contact_row(contacts,' · ','#888') }}</div>
+      </div>
+    </div>
+    {% if summary %}<div class="sec">{{ sec_title('Professional Summary','#1e3a8a','track') }}<p style="font-size:9pt;color:#555;">{{ summary }}</p></div>{% endif %}
+    {% if experience %}<div class="sec">{{ sec_title('Professional Experience','#1e3a8a','track') }}{{ exp_list(experience) }}</div>{% endif %}
+    {% if education %}<div class="sec">{{ sec_title('Education','#1e3a8a','track') }}{{ edu_list(education) }}</div>{% endif %}
+    {% if skills %}<div class="sec">{{ sec_title('Skills','#1e3a8a','track') }}{{ skill_tags(skills,'#eff6ff','#1e3a8a') }}</div>{% endif %}
+    {% if languages %}<div class="sec">{{ sec_title('Languages','#1e3a8a','track') }}{{ lang_list(languages,'#1e3a8a') }}</div>{% endif %}
+    {% if certifications %}<div class="sec">{{ sec_title('Certifications','#1e3a8a','track') }}<p style="font-size:9pt;color:#555;">{{ certifications }}</p></div>{% endif %}
+  </div>
+</body>
+</html>

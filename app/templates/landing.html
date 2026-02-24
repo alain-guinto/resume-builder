@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Build an ATS-optimized, recruiter-ready resume in minutes. Choose from 24 professional templates, fill in your details, and download as PDF or DOCX instantly.">
+  <title>ResumeForge — Build a Resume That Gets You Hired</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- ═══════════════════════════ NAV ════════════════════════════════════════ -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    </div>
+    ResumeForge
+  </a>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#templates">Templates</a>
+  </div>
+  <div class="nav-actions">
+    <a href="/login" class="btn-ghost" style="text-decoration:none;">Sign In</a>
+    <a href="/templates" class="btn-primary" style="text-decoration:none;">Build My Resume</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════════════════ -->
+<main id="main-content">
+<section class="hero" id="hero" aria-labelledby="hero-title">
+  <div class="hero-inner">
+
+    <!-- Left: copy + CTAs -->
+    <div class="hero-copy">
+      <div class="hero-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="#a5b4fc" stroke="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+        Trusted by 2M+ professionals
+      </div>
+      <h1 class="hero-title" id="hero-title">
+        A resume that<br>
+        <span class="highlight">gets you hired faster</span>
+      </h1>
+      <p class="hero-sub">
+        Build an ATS-optimized, recruiter-ready resume in minutes.
+        Choose from professional templates, fill in your details, and download instantly.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="/templates" class="btn-cta btn-cta-main" style="text-decoration:none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Build My Resume — It's Free
+        </a>
+
+        <div class="social-divider">or continue with</div>
+
+        <div class="social-btns">
+          <!-- Google -->
+          <a href="/login" class="btn-social" style="text-decoration:none;">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Sign in with Google
+          </a>
+
+          <!-- Facebook -->
+          <a href="/login" class="btn-social" style="text-decoration:none;">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#1877F2">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Sign in with Facebook
+          </a>
+        </div>
+
+        <div class="hero-trust">
+          <div class="trust-avatars">
+            <div class="trust-avatar">A</div>
+            <div class="trust-avatar">J</div>
+            <div class="trust-avatar">M</div>
+            <div class="trust-avatar">S</div>
+          </div>
+          <span>Join <strong style="color:#e2e8f0;">2M+</strong> job seekers building their resume today</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: animated resume mockup -->
+    <div class="hero-visual">
+      <div class="resume-card-accent top-left">
+        <span class="accent-dot" style="background:#16a34a;"></span>
+        ATS Score: 98%
+      </div>
+
+      <div class="resume-card">
+        <div class="resume-card-inner">
+          <div class="resume-card-header">
+            <div class="resume-avatar">👤</div>
+            <div class="resume-name-block">
+              <div class="resume-name-line"></div>
+              <div class="resume-title-line"></div>
+            </div>
+            <div class="resume-score-badge">100%</div>
+          </div>
+          <div class="resume-body">
+            <div class="resume-section-label"></div>
+            <div class="resume-line w-full"></div>
+            <div class="resume-line w-90"></div>
+            <div class="resume-line w-75"></div>
+
+            <div class="resume-section-gap"></div>
+            <div class="resume-section-label"></div>
+            <div class="resume-exp-row">
+              <div class="resume-exp-dot"></div>
+              <div class="resume-exp-lines">
+                <div class="resume-line w-80"></div>
+                <div class="resume-line w-60"></div>
+                <div class="resume-line w-90"></div>
+              </div>
+            </div>
+            <div class="resume-exp-row">
+              <div class="resume-exp-dot"></div>
+              <div class="resume-exp-lines">
+                <div class="resume-line w-75"></div>
+                <div class="resume-line w-60"></div>
+                <div class="resume-line w-80"></div>
+              </div>
+            </div>
+
+            <div class="resume-section-gap"></div>
+            <div class="resume-section-label"></div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+              <div style="height:18px;width:70px;border-radius:999px;background:#e0e7ff;"></div>
+              <div style="height:18px;width:55px;border-radius:999px;background:#e0e7ff;"></div>
+              <div style="height:18px;width:80px;border-radius:999px;background:#e0e7ff;"></div>
+              <div style="height:18px;width:60px;border-radius:999px;background:#e0e7ff;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-card-accent bottom-right">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#16a34a" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Interview Ready!
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════ STATS ══════════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <span class="stat-number">2M+</span>
+      <div class="stat-label">Resumes Created</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">3×</span>
+      <div class="stat-label">More Interviews</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">4.9★</span>
+      <div class="stat-label">Average Rating</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">50+</span>
+      <div class="stat-label">Templates</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ HOW IT WORKS ═══════════════════════════════ -->
+<section class="section" id="how-it-works">
+  <div class="section-inner">
+    <div class="section-header centered">
+      <div class="section-tag">Simple Process</div>
+      <h2 class="section-title">From blank page to hired — in 3 steps</h2>
+      <p class="section-sub">Our guided builder walks you through every section so you never get stuck staring at an empty page.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-title">Upload or Start Fresh</div>
+        <p class="step-desc">Already have a resume? Upload your PDF or DOCX and we'll auto-fill all your details. Or start from scratch in seconds.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-title">Fill &amp; Choose a Template</div>
+        <p class="step-desc">Add your experience, skills and education with our guided editor. Pick from professional templates — classic, modern or minimal.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-title">Download &amp; Apply</div>
+        <p class="step-desc">Export your polished resume as a PDF or DOCX instantly. ATS-optimized so it passes automated screening systems.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ FEATURES ══════════════════════════════════ -->
+<section class="section features-section" id="features">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-tag">Why ResumeForge</div>
+      <h2 class="section-title">Everything you need to land the interview</h2>
+      <p class="section-sub">Built for job seekers who want results, not headaches.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">ATS-Optimized</div>
+        <p class="feature-desc">All templates are built to pass Applicant Tracking Systems so your resume actually reaches human eyes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✨</div>
+        <div class="feature-title">Professional Templates</div>
+        <p class="feature-desc">Classic, modern, and minimal designs crafted by professional resume writers and UX designers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Instant Download</div>
+        <p class="feature-desc">Export as PDF or DOCX in a single click. Pixel-perfect formatting that looks identical on any device.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💡</div>
+        <div class="feature-title">Built-in Spell Check</div>
+        <p class="feature-desc">Integrated spell check and writing tips highlight errors and suggest improvements as you type.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ TEMPLATES ═════════════════════════════════ -->
+<section class="section" id="templates">
+  <div class="section-inner" style="max-width:1200px;">
+    <div class="section-header centered">
+      <div class="section-tag">Templates</div>
+      <h2 class="section-title">Choose your resume style</h2>
+      <p class="section-sub">24 professionally designed templates — single column, two-column, with or without photo.</p>
+    </div>
+
+    <!-- 4 featured templates grid (live renders) -->
+    <div class="featured-tmpl-grid" id="featuredTmplGrid"></div>
+
+    <!-- View More button -->
+    <div style="text-align:center;margin-top:2rem;">
+      <a href="/templates" class="view-more-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        View All 24 Templates
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ FINAL CTA ═════════════════════════════════ -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2 class="cta-title">Ready to land your dream job?</h2>
+    <p class="cta-sub">
+      Join over 2 million professionals who built their interview-winning resume with ResumeForge.
+      It's completely free to get started.
+    </p>
+    <a href="/templates" class="btn-cta-lg" style="text-decoration:none;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Create My Free Resume
+    </a>
+  </div>
+</section>
+</main>
+
+<!-- ═══════════════════════════ FOOTER ════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="nav-logo-icon" style="width:24px;height:24px;font-size:0.75rem;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      ResumeForge
+    </div>
+    <div class="footer-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#templates">Templates</a>
+    </div>
+    <div class="footer-copy">© 2026 ResumeForge. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════ UPLOAD MODAL ══════════════════════════════ -->
+<div class="modal-overlay" id="upload-modal" role="dialog" aria-modal="true" aria-labelledby="upload-modal-title" aria-hidden="true">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" id="modal-close" type="button" aria-label="Close upload modal">✕</button>
+      <div class="modal-icon">📄</div>
+      <div class="modal-title" id="upload-modal-title">Start Your Resume</div>
+      <p class="modal-sub">Upload your existing resume and we'll auto-fill your details, or start fresh from scratch.</p>
+    </div>
+
+    <div class="upload-zone" id="upload-zone">
+      <input type="file" id="resume-file-input" accept=".pdf,.docx,.doc" tabindex="-1" aria-label="Upload resume file (PDF or DOCX, max 10 MB)">
+      <div id="upload-content">
+        <div class="upload-icon">☁️</div>
+        <div class="upload-label">Drag &amp; drop your resume here</div>
+        <p class="upload-hint">or <span>click to browse</span> &nbsp;·&nbsp; PDF or DOCX &nbsp;·&nbsp; Max 10 MB</p>
+      </div>
+      <div class="upload-progress" id="upload-progress">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div class="upload-status" id="upload-status"></div>
+      </div>
+    </div>
+
+    <div class="modal-divider">or</div>
+
+    <button class="btn-skip" id="btn-skip" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      Start with a blank resume
+    </button>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/resume-templates.js') }}"></script>
+<script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+<script>
+// ── Featured 4-template showcase ───────────────────────────────────────────
+(function () {
+  const grid = document.getElementById('featuredTmplGrid');
+  if (!grid || typeof TEMPLATE_REGISTRY === 'undefined') return;
+
+  // 4 featured templates to highlight on landing page
+  const FEATURED = [
+    { id: 'classic',     accent: '#1e3a5f', label: 'Classic',       tag: 'Most Popular' },
+    { id: 'modern',      accent: '#334155', label: 'Modern',        tag: 'Two Column' },
+    { id: 'photo_modern',accent: '#0ea5e9', label: 'Photo Modern',  tag: 'With Photo' },
+    { id: 'timeline',    accent: '#7c3aed', label: 'Timeline',      tag: 'Creative' },
+  ];
+
+  const items = [];
+  FEATURED.forEach(({ id, accent, label, tag }) => {
+    const card = document.createElement('div');
+    card.className = 'feat-tmpl-card';
+
+    const thumb = document.createElement('div');
+    thumb.className = 'feat-tmpl-thumb';
+
+    const inner = document.createElement('div');
+    inner.className = 'feat-tmpl-inner';
+    thumb.appendChild(inner);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'feat-tmpl-overlay';
+    overlay.innerHTML = '<span>Use This Template</span>';
+    overlay.addEventListener('click', () => {
+      sessionStorage.setItem('selectedTemplate', id);
+      sessionStorage.setItem('selectedAccent', accent);
+      document.getElementById('upload-modal').classList.add('open');
+    });
+    thumb.appendChild(overlay);
+
+    const footer = document.createElement('div');
+    footer.className = 'feat-tmpl-footer';
+    footer.innerHTML = `<span class="feat-tmpl-name">${label}</span><span class="feat-tmpl-tag">${tag}</span>`;
+
+    card.appendChild(thumb);
+    card.appendChild(footer);
+    grid.appendChild(card);
+    items.push({ id, accent, card, inner, thumb, rendered: false });
+
+    // Click card → open upload modal
+    card.addEventListener('click', e => {
+      if (e.target.closest('.feat-tmpl-overlay')) return;
+      sessionStorage.setItem('selectedTemplate', id);
+      sessionStorage.setItem('selectedAccent', accent);
+      document.getElementById('upload-modal').classList.add('open');
+    });
+  });
+
+  // Render templates at screen-pixel A4 (595×842) so scale is always < 1 (scaled down).
+  // Using 210×297 caused scale > 1 on wide columns, making fonts look huge.
+  const RENDER_W = 595, RENDER_H = 842;
+
+  function renderItem(item) {
+    const tw = item.thumb.offsetWidth  || 260;
+    const th = item.thumb.offsetHeight || 347;
+    const scale = Math.min(tw / RENDER_W, th / RENDER_H);
+    const sample = getTemplateSample(item.id);
+    item.inner.style.cssText = [
+      `width:${RENDER_W}px`,
+      `height:${RENDER_H}px`,
+      `transform:scale(${scale})`,
+      `transform-origin:top left`,
+      `position:absolute`,
+      `top:0`,
+      `left:0`,
+      `pointer-events:none`,
+    ].join(';');
+    item.inner.innerHTML = renderResume(sample, item.id, { accent: item.accent, font: 'sans-serif', spacing: '1.4' });
+    item.rendered = true;
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const item = items.find(c => c.card === e.target);
+      if (item && !item.rendered) renderItem(item);
+    });
+  }, { rootMargin: '200px' });
+  items.forEach(c => obs.observe(c.card));
+
+  window.addEventListener('resize', () => {
+    items.forEach(item => {
+      if (!item.rendered) return;
+      const tw = item.thumb.offsetWidth  || 260;
+      const th = item.thumb.offsetHeight || 347;
+      const scale = Math.min(tw / RENDER_W, th / RENDER_H);
+      item.inner.style.transform = `scale(${scale})`;
+    });
+  });
+}());
+</script>
+</body>
+</html>
