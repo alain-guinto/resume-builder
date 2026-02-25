@@ -1,18 +1,19 @@
 'use strict';
 
 // ── Template metadata ──────────────────────────────────────────────────────
-const RECOMMENDED_IDS = ['classic', 'minimal', 'modern', 'two_col_blue', 'executive', 'photo_modern'];
+const RECOMMENDED_IDS = ['classic', 'modern_simple', 'simple_ats', 'modern_with_photo', 'two_col_ats', 'elegant'];
 
 const ACCENT_PALETTES = {
   default:  ['#1e3a5f','#3b82f6','#0f172a','#0d9488','#7c3aed','#dc2626','#f59e0b'],
 };
 
 const TAG_MAP = {
-  'Single Column':  { cols: '1', photo: false, style: ['professional','minimal'] },
-  'Single + Photo': { cols: '1', photo: true,  style: ['professional'] },
-  'Two Column':     { cols: '2', photo: false, style: ['professional','creative'] },
-  'Two Col + Photo':{ cols: '2', photo: true,  style: ['professional','creative'] },
-  'Special':        { cols: '1', photo: false, style: ['creative','minimal'] },
+  'Professional':   { cols: '1', photo: false, style: ['professional','minimal'] },
+  'Two Column':    { cols: '2', photo: false, style: ['professional','creative'] },
+  'Creative':       { cols: '1', photo: false, style: ['creative'] },
+  'ATS Optimized':  { cols: '1', photo: false, style: ['professional','ats'] },
+  'Minimal':        { cols: '1', photo: false, style: ['minimal'] },
+  'Starter':        { cols: '1', photo: false, style: ['professional','starter'] },
 };
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -32,7 +33,8 @@ const resultCount = document.getElementById('resultCount');
 // ── Build grid ─────────────────────────────────────────────────────────────
 Object.keys(TEMPLATE_REGISTRY).forEach(id => {
   const info     = TEMPLATE_REGISTRY[id];
-  const tags     = TAG_MAP[info.cat] || { cols:'1', photo:false, style:['professional'] };
+  const baseTags = TAG_MAP[info.cat] || { cols:'1', photo:false, style:['professional'] };
+  const tags     = { ...baseTags, photo: info.hasPhoto };
   const isRecom  = RECOMMENDED_IDS.includes(id);
   const palette  = ACCENT_PALETTES.default;
 
@@ -178,7 +180,7 @@ function applyFilters() {
       }
     }
     if (colsFilters.length) show = show && colsFilters.includes(c.tags.cols);
-    if (styleFilters.length) show = show && styleFilters.some(s => c.tags.style.includes(s));
+    if (styleFilters.length) show = show && c.tags.style.some(s => styleFilters.includes(s));
 
     c.card.classList.toggle('hidden', !show);
     if (show) {

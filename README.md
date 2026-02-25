@@ -47,6 +47,35 @@ Open [http://localhost:5001](http://localhost:5001) in your browser.
 
 ---
 
+## Next.js Frontend (Optional)
+
+The project includes a Next.js frontend that proxies to the Flask API. Use it for a modern React-based UI.
+
+### Run both Flask + Next.js
+
+**Terminal 1 — Flask API:**
+```bash
+python run.py
+```
+
+**Terminal 2 — Next.js:**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) for the Next.js app. API and auth requests are proxied to Flask at `localhost:5001`.
+
+### Environment
+
+Create `frontend/.env.local`:
+```
+NEXT_PUBLIC_API_URL=http://localhost:5001
+```
+
+---
+
 ## Project structure
 
 ```

@@ -7,8 +7,9 @@
   <title>Template Editor — Resume Builder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/template_editor.css') }}">
 </head>
 <body>
@@ -17,10 +18,17 @@
     <header class="header-bar">
       <a href="/editor" class="nav-back">Back to editor</a>
       <div style="display:flex;align-items:center;gap:1rem;">
-        <button id="btn-download-pdf" class="btn-download-pdf">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download PDF
-        </button>
+        <div class="download-dropdown-wrap">
+          <button id="btn-download" class="btn-download-pdf" type="button" aria-haspopup="true" aria-expanded="false">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+            <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="download-dropdown" id="download-dropdown" role="menu">
+            <button type="button" class="download-option" data-format="pdf" role="menuitem">Download as PDF</button>
+            <button type="button" class="download-option" data-format="docx" role="menuitem">Download as DOCX</button>
+          </div>
+        </div>
         <span class="saved-badge">✔ Saved</span>
       </div>
     </header>
@@ -62,15 +70,12 @@
           </div>
           <div class="template-grid" id="template-grid">
             {% set tmpl_list = [
-              ('classic','Classic'),('minimal','Minimal'),('executive','Executive'),('clean','Clean'),
-              ('bold','Bold'),('corporate','Corporate'),('elegant','Elegant'),('simple','Simple'),
-              ('photo_classic','Photo Classic'),('photo_modern','Photo Modern'),
-              ('photo_minimal','Photo Minimal'),('photo_executive','Photo Exec'),
-              ('modern','Modern'),('two_col_blue','Navy Blue'),('two_col_green','Forest Green'),
-              ('two_col_red','Burgundy'),('two_col_warm','Terracotta'),('two_col_light','Light Sidebar'),
-              ('two_col_photo_blue','Blue + Photo'),('two_col_photo_dark','Dark + Photo'),
-              ('two_col_photo_green','Green + Photo'),('two_col_photo_teal','Teal + Photo'),
-              ('timeline','Timeline'),('infographic','Infographic')
+              ('classic','Classic'),('modern_simple','Modern Simple'),('modern_with_photo','Modern with Photo'),
+              ('chronological','Chronological'),('functional','Functional'),('hybrid','Hybrid'),
+              ('creative','Creative'),('simple_ats','Simple ATS'),('two_col_ats','Two Column ATS'),
+              ('polished','Polished'),('minimalist','Minimalist'),('elegant','Elegant'),
+              ('teenager','Teenager'),('internship','Internship'),('entry_level','Entry-Level'),
+              ('career_change','Career Change')
             ] %}
             {% for tid, tname in tmpl_list %}
             <div class="template-card" data-template="{{ tid }}" title="{{ tname }}">

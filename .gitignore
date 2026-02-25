@@ -37,3 +37,7 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Next.js frontend
+frontend/.next/
+frontend/node_modules/

@@ -12,7 +12,7 @@
       awards: '',
       additional: ''
     };
-    const STEP_LABELS = ['Contacts', 'Experience', 'Education', 'Skills', 'Summary', 'Additional'];
+    const STEP_LABELS = ['Contacts', 'Experience', 'Education', 'Skills', 'Summary', 'Finalize'];
     let currentStep = 0;
     let currentTemplate = 'classic';
 
@@ -98,9 +98,60 @@
       }
     }
 
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    function parseMonthYear(val) {
+      if (!val || typeof val !== 'string') return { month: '', year: '' };
+      const s = val.trim().toLowerCase();
+      if (s === 'present' || s === 'current' || s === 'now') return { month: '', year: 'present' };
+      const m = s.match(/^(\d{1,2})[\/\-\.](\d{4})$/);
+      if (m) return { month: String(parseInt(m[1], 10)).padStart(2, '0'), year: m[2] };
+      const m2 = s.match(/^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s*[\'\.]?\s*(\d{4})$/i);
+      if (m2) {
+        const mi = MONTHS.findIndex(x => x.toLowerCase() === m2[1].slice(0, 3));
+        return { month: mi >= 0 ? String(mi + 1).padStart(2, '0') : '', year: m2[2] };
+      }
+      const m3 = s.match(/^(\d{4})[\/\-](\d{1,2})$/);
+      if (m3) return { month: String(parseInt(m3[2], 10)).padStart(2, '0'), year: m3[1] };
+      const m4 = s.match(/^(\d{4})$/);
+      if (m4) return { month: '01', year: m4[1] };
+      return { month: '', year: '' };
+    }
+
+    function formatMonthYear(month, year) {
+      if (!month || !year) return '';
+      const m = parseInt(month, 10);
+      if (m >= 1 && m <= 12) return `${m}/${year}`;
+      return '';
+    }
+
+    function toMonthInputValue(month, year) {
+      if (!month || !year || year === 'present') return '';
+      return `${year}-${String(month).padStart(2, '0')}`;
+    }
+
+    function fromMonthInputValue(val) {
+      if (!val || typeof val !== 'string') return { month: '', year: '' };
+      const m = val.match(/^(\d{4})-(\d{2})$/);
+      if (m) return { month: m[2], year: m[1] };
+      return parseMonthYear(val);
+    }
+
     function renderExperience() {
       const list = document.getElementById('experience-list');
-      list.innerHTML = data.experience.map((exp, i) => `
+      if (data.experience.length === 0) {
+        list.innerHTML = '<div class="empty-state"><p class="empty-state-text">Add your first work experience to get started</p><p class="empty-state-hint">Include your job title, company, dates, and key achievements.</p></div>';
+        return;
+      }
+      list.innerHTML = data.experience.map((exp, i) => {
+        const startRaw = exp.startDate || (exp.dates && exp.dates.split(/\s*[–—\-]\s*/)[0]) || '';
+        const endRaw = exp.endDate || (exp.dates && exp.dates.split(/\s*[–—\-]\s*/)[1]) || '';
+        const start = parseMonthYear(startRaw);
+        const end = parseMonthYear(endRaw);
+        const endIsPresent = endRaw.toLowerCase().trim() === 'present' || endRaw.toLowerCase().trim() === 'current' || end.year === 'present';
+        const startVal = toMonthInputValue(start.month, start.year);
+        const endVal = endIsPresent ? '' : toMonthInputValue(end.month, end.year);
+        return `
         <div class="array-item" data-idx="${i}">
           <div class="array-item-header">
             <span>${exp.role || exp.jobTitle || 'New position'}, ${exp.company || exp.employer || 'Company'}</span>
@@ -118,14 +169,20 @@
             <label for="exp-location-${i}">Location</label>
             <input type="text" id="exp-location-${i}" value="${(exp.location || '').replace(/"/g, '&quot;')}" placeholder="City, Country">
           </div>
-          <div style="display: flex; gap: 1rem;">
-            <div class="form-group" style="flex: 1;">
-              <label for="exp-startDate-${i}">Start date</label>
-              <input type="text" id="exp-startDate-${i}" value="${(exp.startDate || (exp.dates && exp.dates.split(/\s*[–—\-]\s*/)[0]) || '').replace(/"/g, '&quot;')}" placeholder="MM/YYYY">
+          <div class="form-group">
+            <label>Dates</label>
+            <div class="date-picker-row">
+              <div class="form-group" style="flex: 1;">
+                <input type="month" id="exp-startDate-${i}" value="${startVal}" aria-label="Start date" placeholder="Start">
+              </div>
+              <span class="date-range-sep">–</span>
+              <div class="form-group" style="flex: 1;">
+                <input type="month" id="exp-endDate-${i}" value="${endVal}" aria-label="End date" placeholder="End" ${endIsPresent ? 'disabled' : ''}>
+              </div>
             </div>
-            <div class="form-group" style="flex: 1;">
-              <label for="exp-endDate-${i}">End date</label>
-              <input type="text" id="exp-endDate-${i}" value="${(exp.endDate || (exp.dates && exp.dates.split(/\s*[–—\-]\s*/)[1]) || '').replace(/"/g, '&quot;')}" placeholder="MM/YYYY or Present">
+            <div class="date-picker-present">
+              <input type="checkbox" id="exp-endPresent-${i}" ${endIsPresent ? 'checked' : ''}>
+              <label for="exp-endPresent-${i}">I currently work here</label>
             </div>
           </div>
           <div class="form-group">
@@ -133,7 +190,7 @@
             <textarea id="exp-desc-${i}" rows="4" placeholder="Key responsibilities and achievements (use bullet points)">${(exp.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
           </div>
         </div>
-      `).join('');
+      `}).join('');
       list.querySelectorAll('[data-remove-exp]').forEach(btn => {
         btn.addEventListener('click', () => {
           data.experience.splice(parseInt(btn.dataset.removeExp), 1);
@@ -141,15 +198,42 @@
           updatePreview();
         });
       });
-      list.querySelectorAll('input, textarea').forEach(el => {
+      list.querySelectorAll('input, textarea, select').forEach(el => {
         el.addEventListener('input', () => collectExperience());
+        el.addEventListener('change', () => collectExperience());
+      });
+      list.querySelectorAll('[id^="exp-endPresent-"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const i = cb.id.replace('exp-endPresent-', '');
+          const endInput = document.getElementById(`exp-endDate-${i}`);
+          if (cb.checked) {
+            if (endInput) { endInput.disabled = true; endInput.value = ''; }
+          } else {
+            if (endInput) {
+              endInput.disabled = false;
+              const d = new Date();
+              endInput.value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+            }
+          }
+          collectExperience();
+        });
+        if (cb.checked) {
+          const i = cb.id.replace('exp-endPresent-', '');
+          const endInput = document.getElementById(`exp-endDate-${i}`);
+          if (endInput) endInput.disabled = true;
+        }
       });
     }
 
     function collectExperience() {
       data.experience = data.experience.map((_, i) => {
-        const start = document.getElementById(`exp-startDate-${i}`)?.value || '';
-        const end = document.getElementById(`exp-endDate-${i}`)?.value || '';
+        const startVal = document.getElementById(`exp-startDate-${i}`)?.value || '';
+        const endVal = document.getElementById(`exp-endDate-${i}`)?.value || '';
+        const endPresent = document.getElementById(`exp-endPresent-${i}`)?.checked || false;
+        const startParsed = fromMonthInputValue(startVal);
+        const endParsed = endPresent ? { month: '', year: 'present' } : fromMonthInputValue(endVal);
+        const start = formatMonthYear(startParsed.month, startParsed.year);
+        const end = endPresent ? 'Present' : formatMonthYear(endParsed.month, endParsed.year);
         const dates = start && end ? `${start} – ${end}` : (start || end);
         return {
           role: document.getElementById(`exp-role-${i}`)?.value || '',
@@ -159,6 +243,7 @@
           startDate: start,
           endDate: end,
           dates: dates,
+          endPresent: endPresent,
           description: document.getElementById(`exp-desc-${i}`)?.value || ''
         };
       });
@@ -167,7 +252,16 @@
 
     function renderEducation() {
       const list = document.getElementById('education-list');
-      list.innerHTML = data.education.map((edu, i) => `
+      if (data.education.length === 0) {
+        list.innerHTML = '<div class="empty-state"><p class="empty-state-text">Add your education to get started</p><p class="empty-state-hint">Include your school, degree, and graduation date.</p></div>';
+        return;
+      }
+      list.innerHTML = data.education.map((edu, i) => {
+        const startParsed = parseMonthYear(edu.startDate || (edu.dates && edu.dates.split(/\s*[–—\-]\s*/)[0]) || '');
+        const endParsed = parseMonthYear(edu.endDate || (edu.dates && edu.dates.split(/\s*[–—\-]\s*/)[1]) || edu.dates || '');
+        const startVal = toMonthInputValue(startParsed.month, startParsed.year);
+        const endVal = toMonthInputValue(endParsed.month, endParsed.year);
+        return `
         <div class="array-item" data-idx="${i}">
           <div class="array-item-header">
             <span>${edu.school || 'New education'}, ${edu.degree || ''}</span>
@@ -185,14 +279,16 @@
             <label for="edu-degree-${i}">Degree</label>
             <input type="text" id="edu-degree-${i}" value="${(edu.degree || '').replace(/"/g, '&quot;')}" placeholder="e.g. Bachelor of Science (B.S.)">
           </div>
-          <div style="display: flex; gap: 1rem;">
-            <div class="form-group" style="flex: 1;">
-              <label for="edu-startDate-${i}">Start date</label>
-              <input type="text" id="edu-startDate-${i}" value="${(edu.startDate || (edu.dates && edu.dates.split(/\s*[–—\-]\s*/)[0]) || '').replace(/"/g, '&quot;')}" placeholder="MM/YYYY">
-            </div>
-            <div class="form-group" style="flex: 1;">
-              <label for="edu-endDate-${i}">End date</label>
-              <input type="text" id="edu-endDate-${i}" value="${(edu.endDate || (edu.dates && edu.dates.split(/\s*[–—\-]\s*/)[1]) || edu.dates || '').replace(/"/g, '&quot;')}" placeholder="MM/YYYY">
+          <div class="form-group">
+            <label>Dates</label>
+            <div class="date-picker-row">
+              <div class="form-group" style="flex: 1;">
+                <input type="month" id="edu-startDate-${i}" value="${startVal}" aria-label="Start date">
+              </div>
+              <span class="date-range-sep">–</span>
+              <div class="form-group" style="flex: 1;">
+                <input type="month" id="edu-endDate-${i}" value="${endVal}" aria-label="End date">
+              </div>
             </div>
           </div>
           <div class="form-group">
@@ -200,7 +296,8 @@
             <textarea id="edu-desc-${i}" rows="2" placeholder="Honors, activities, relevant coursework">${(edu.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
       list.querySelectorAll('[data-remove-edu]').forEach(btn => {
         btn.addEventListener('click', () => {
           data.education.splice(parseInt(btn.dataset.removeEdu), 1);
@@ -210,13 +307,18 @@
       });
       list.querySelectorAll('input, textarea').forEach(el => {
         el.addEventListener('input', () => collectEducation());
+        el.addEventListener('change', () => collectEducation());
       });
     }
 
     function collectEducation() {
       data.education = data.education.map((_, i) => {
-        const start = document.getElementById(`edu-startDate-${i}`)?.value || '';
-        const end = document.getElementById(`edu-endDate-${i}`)?.value || '';
+        const startVal = document.getElementById(`edu-startDate-${i}`)?.value || '';
+        const endVal = document.getElementById(`edu-endDate-${i}`)?.value || '';
+        const startParsed = fromMonthInputValue(startVal);
+        const endParsed = fromMonthInputValue(endVal);
+        const start = formatMonthYear(startParsed.month, startParsed.year);
+        const end = formatMonthYear(endParsed.month, endParsed.year);
         const dates = start && end ? `${start} – ${end}` : (start || end);
         return {
           school: document.getElementById(`edu-school-${i}`)?.value || '',
@@ -338,7 +440,11 @@
       const paper = document.getElementById('preview-paper');
       if (!paper) return;
       paper.className = 'preview-paper ' + currentTemplate;
-      paper.innerHTML = getPreviewHTML();
+      data.template = currentTemplate;
+      const html = typeof window.renderResume === 'function'
+        ? window.renderResume(data, currentTemplate, { accent: '#1e3a5f', font: 'sans-serif', spacing: '1.4' })
+        : getPreviewHTML();
+      paper.innerHTML = html || '<div style="padding:2rem;color:#64748b;">Preview loading…</div>';
       updateResumeScore();
       requestAnimationFrame(() => window.resetPaginationAndUpdate && window.resetPaginationAndUpdate());
     }
@@ -616,8 +722,26 @@
       if (currentStep > 0) showStep(currentStep - 1);
     });
 
-    document.getElementById('btn-next').addEventListener('click', () => {
+    document.getElementById('btn-next').addEventListener('click', async () => {
       if (currentStep < 5) { showStep(currentStep + 1); return; }
+      // Save current form data before redirect so template-editor shows it (not stale API data)
+      collectContacts();
+      collectExperience();
+      collectEducation();
+      collectLanguages();
+      data.summary = document.getElementById('summary')?.value || '';
+      data.certifications = document.getElementById('certifications')?.value || '';
+      data.awards = document.getElementById('awards')?.value || '';
+      data.template = currentTemplate;
+      try {
+        await fetch(resumeApiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+      } catch (e) {
+        console.warn('[editor] Save before redirect failed:', e);
+      }
       window.location.href = '/template-editor?download=1';
     });
 
@@ -750,6 +874,9 @@
       if (certEl) certEl.value = data.certifications || '';
       if (awardsEl) awardsEl.value = data.awards || '';
 
+      // Populate contacts autocomplete (phone codes, country/city datalists) with current values
+      initContactsAutocomplete();
+
       // Defer preview so DOM has settled; re-apply contacts after paint (fixes inputs not filling)
       const runPreview = () => {
         applyContacts();  // Re-apply in case DOM wasn't ready on first pass
@@ -881,8 +1008,38 @@
       }
     }
 
+    function initContactsAutocomplete() {
+      if (typeof CONTACTS_DATA === 'undefined') return;
+      const { COUNTRIES, CITIES, PHONE_CODES } = CONTACTS_DATA;
+      const countryList = document.getElementById('contact-country-list');
+      const cityList = document.getElementById('contact-city-list');
+      const phoneSelect = document.getElementById('contact-phoneCode');
+      if (countryList && COUNTRIES) {
+        countryList.innerHTML = COUNTRIES.map(c => `<option value="${c}">`).join('');
+      }
+      if (cityList && CITIES) {
+        cityList.innerHTML = CITIES.map(c => `<option value="${c}">`).join('');
+      }
+      if (phoneSelect && PHONE_CODES && PHONE_CODES.length > 0) {
+        const current = phoneSelect.value;
+        const codes = PHONE_CODES.map(p => ({ code: p.code, label: `${p.flag} ${p.code}` }));
+        const hasCurrent = codes.some(p => p.code === current);
+        if (!hasCurrent && current) {
+          codes.unshift({ code: current, label: current });
+        }
+        phoneSelect.innerHTML = codes.map(p => {
+          const sel = p.code === current ? ' selected' : '';
+          return `<option value="${p.code}"${sel}>${p.label}</option>`;
+        }).join('');
+      }
+    }
+
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadResume);
+      document.addEventListener('DOMContentLoaded', () => {
+        initContactsAutocomplete();
+        loadResume();
+      });
     } else {
+      initContactsAutocomplete();
       loadResume();
     }

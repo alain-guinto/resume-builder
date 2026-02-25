@@ -27,30 +27,22 @@
     const _single = (cols) => ({ type: 'single', columns: [cols || ['summary','experience','education','skills','languages','certifications','awards']] });
     const _double = (l, r) => ({ type: 'double', columns: [l, r], columnLabels: ['Sidebar', 'Main Content'] });
     const sectionOrder = {
-      classic:    _single(['summary','experience','details','skills','education','languages','certifications','awards']),
-      minimal:    _single(),
-      executive:  _single(),
-      clean:      _single(),
-      bold:       _single(),
-      corporate:  _single(),
-      elegant:    _single(),
-      simple:     _single(['summary','experience','education','skills','languages']),
-      photo_classic:   _single(['summary','experience','education','skills','languages','certifications']),
-      photo_modern:    _single(['summary','experience','education','skills','languages']),
-      photo_minimal:   _single(),
-      photo_executive: _single(['summary','experience','education','skills','languages','certifications']),
-      modern:          _double(['contact','education','skills','languages','certifications'], ['summary','experience','awards']),
-      two_col_blue:    _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
-      two_col_green:   _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
-      two_col_red:     _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
-      two_col_warm:    _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
-      two_col_light:   _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
-      two_col_photo_blue:  _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
-      two_col_photo_dark:  _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
-      two_col_photo_green: _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
-      two_col_photo_teal:  _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
-      timeline:    _single(['summary','experience','education','skills','languages','certifications','awards']),
-      infographic: _single(['summary','experience','education','skills','languages','certifications','awards']),
+      classic:         _single(['summary','experience','details','skills','education','languages','certifications','awards']),
+      modern_simple:   _single(),
+      modern_with_photo: _single(['summary','experience','education','skills','languages']),
+      chronological:   _single(['summary','experience','details','skills','education','languages','certifications','awards']),
+      functional:      _single(),
+      hybrid:          _double(['contact','education','skills','languages','certifications'], ['summary','experience','awards']),
+      creative:        _single(['summary','experience','education','skills','languages','certifications','awards']),
+      simple_ats:      _single(),
+      two_col_ats:     _double(['contact','education','skills','languages'], ['summary','experience','certifications','awards']),
+      polished:        _single(),
+      minimalist:      _single(),
+      elegant:         _single(),
+      teenager:        _single(['summary','experience','education','skills','languages']),
+      internship:      _single(['summary','experience','education','skills','languages']),
+      entry_level:     _single(),
+      career_change:   _single(),
     };
 
     // Section renderers removed — now handled by resume-templates.js
@@ -131,10 +123,11 @@
     function getPreviewHTML(template) {
       const t = template || currentTemplate;
       return renderResume(data, t, {
-        accent:     accentColor,
-        font:       currentFont,
-        spacing:    lineSpacing,
-        applySpell: applySpellHighlights,
+        accent:       accentColor,
+        font:         currentFont,
+        spacing:      lineSpacing,
+        applySpell:   applySpellHighlights,
+        sectionOrder: sectionOrder[t],
       });
     }
 
@@ -170,7 +163,7 @@
       if (!layout) { container.innerHTML = ''; return; }
       const isDouble = layout.type === 'double';
 
-      let html = `<div ${isDouble ? 'class="section-columns"' : ''}>`;
+      let html = `<div class="section-columns${isDouble ? ' section-columns-stacked' : ''}">`;
       layout.columns.forEach((col, colIdx) => {
         const label = layout.columnLabels ? layout.columnLabels[colIdx] : null;
         html += `<div class="section-column">`;
@@ -360,20 +353,31 @@
       }
     }
 
-    // ── Download PDF (client-side via html2pdf.js) ────────────────────────────
-    const btnDownloadPdf = document.getElementById('btn-download-pdf');
+    // ── Download (PDF client-side, DOCX via API) ───────────────────────────────
+    const btnDownload = document.getElementById('btn-download');
+    const downloadDropdown = document.getElementById('download-dropdown');
+
+    function getExportData() {
+      const payload = { ...data };
+      payload.template = currentTemplate;
+      if (payload.contacts && !payload.contacts.location && (payload.contacts.city || payload.contacts.country)) {
+        payload.contacts = { ...payload.contacts };
+        payload.contacts.location = [payload.contacts.city, payload.contacts.country].filter(Boolean).join(', ');
+      }
+      return payload;
+    }
 
     async function downloadPdf() {
       const paper = document.getElementById('preview-paper');
       if (!paper) { alert('No preview content to export.'); return; }
 
-      const orig = btnDownloadPdf.innerHTML;
-      btnDownloadPdf.innerHTML =
+      const orig = btnDownload.innerHTML;
+      btnDownload.innerHTML =
         '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Generating…';
-      btnDownloadPdf.disabled = true;
+      btnDownload.disabled = true;
+      if (downloadDropdown) downloadDropdown.classList.remove('open');
 
       try {
-        // Clone the paper so we can strip any live transforms/positioning
         const clone = paper.cloneNode(true);
         clone.style.cssText =
           'position:relative;top:0;left:0;transform:none;' +
@@ -392,15 +396,88 @@
           })
           .from(clone)
           .save();
+        showDownloadSuccess(filename);
       } catch (e) {
         alert('PDF export failed: ' + e.message);
       } finally {
-        btnDownloadPdf.innerHTML = orig;
-        btnDownloadPdf.disabled = false;
+        btnDownload.innerHTML = orig;
+        btnDownload.disabled = false;
       }
     }
 
-    btnDownloadPdf.addEventListener('click', downloadPdf);
+    async function downloadDocx() {
+      if (downloadDropdown) downloadDropdown.classList.remove('open');
+
+      const orig = btnDownload.innerHTML;
+      btnDownload.innerHTML =
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Generating…';
+      btnDownload.disabled = true;
+
+      try {
+        const payload = getExportData();
+        const res = await fetch(`${API}/export/docx`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || 'DOCX export failed');
+        }
+        const blob = await res.blob();
+        const filename = (data.contacts?.name || 'Resume').replace(/\s+/g, '-') + '.docx';
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        showDownloadSuccess(filename);
+      } catch (e) {
+        alert('DOCX export failed: ' + (e.message || 'Unknown error'));
+      } finally {
+        btnDownload.innerHTML = orig;
+        btnDownload.disabled = false;
+      }
+    }
+
+    function showDownloadSuccess(filename) {
+      const toast = document.createElement('div');
+      toast.className = 'download-success-toast';
+      toast.innerHTML = `<span class="toast-icon">✓</span> <span>${filename} downloaded</span>`;
+      toast.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#16a34a;color:#fff;padding:0.65rem 1.25rem;border-radius:10px;font-size:0.9rem;font-weight:600;display:flex;align-items:center;gap:0.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.2);z-index:9999;';
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    if (btnDownload) {
+      btnDownload.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (downloadDropdown) downloadDropdown.classList.toggle('open');
+        btnDownload.setAttribute('aria-expanded', downloadDropdown?.classList.contains('open') ? 'true' : 'false');
+      });
+    }
+
+    if (downloadDropdown) {
+      downloadDropdown.addEventListener('click', (e) => e.stopPropagation());
+      document.querySelectorAll('.download-option').forEach(opt => {
+        opt.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const format = opt.dataset.format;
+          if (format === 'pdf') downloadPdf();
+          else if (format === 'docx') downloadDocx();
+        });
+      });
+    }
+
+    document.addEventListener('click', () => {
+      if (downloadDropdown) downloadDropdown.classList.remove('open');
+      if (btnDownload) btnDownload.setAttribute('aria-expanded', 'false');
+    });
 
     (async () => {
       await loadData();
@@ -408,10 +485,9 @@
       updatePreview();
       updateThumbnails();
 
-      // Show Download PDF button if redirected from the finalize step
       if (new URLSearchParams(window.location.search).get('download') === '1') {
-        btnDownloadPdf.classList.add('visible');
-        // Scroll the button into view briefly to draw attention
-        btnDownloadPdf.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        const wrap = document.querySelector('.download-dropdown-wrap');
+        if (wrap) wrap.classList.add('visible');
+        wrap?.querySelector('.btn-download-pdf')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     })();

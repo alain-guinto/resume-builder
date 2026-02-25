@@ -5,6 +5,26 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 from flask_login import current_user, login_required
 
 from app.models.resume import ResumeModel
+
+# Map template IDs (from resume data / JS) to actual resume HTML template filenames
+TEMPLATE_TO_HTML = {
+    "classic": "classic",
+    "modern_simple": "modern",
+    "modern_with_photo": "photo_modern",
+    "chronological": "classic",
+    "functional": "minimal",
+    "hybrid": "two_col_light",
+    "creative": "timeline",
+    "simple_ats": "clean",
+    "two_col_ats": "two_col_light",
+    "polished": "elegant",
+    "minimalist": "minimal",
+    "elegant": "elegant",
+    "teenager": "simple",
+    "internship": "simple",
+    "entry_level": "clean",
+    "career_change": "minimal",
+}
 from app.models.resume_db import Resume
 from app.services.resume_parser import parse_resume_file
 
@@ -26,6 +46,9 @@ def upload():
             return redirect(url_for("pages.upload_source"))
         try:
             parsed = parse_resume_file(file.read(), file.filename)
+            tpl = request.form.get("selected_template", "").strip()
+            if tpl:
+                parsed["template"] = tpl
             session["pending_parsed_resume"] = parsed
             session.modified = True
             return redirect(url_for("pages.editor"))
@@ -56,9 +79,10 @@ def dashboard():
         current_resume = resumes[0]
     resume_data = current_resume.data if current_resume else ResumeModel.default_data()
 
-    # Render resume HTML for preview
-    template_name = (resume_data or {}).get("template", "classic")
-    resume_html = render_template(f"resume/{template_name}.html", **(resume_data or ResumeModel.default_data()))
+    # Render resume HTML for preview (map template ID to HTML template filename)
+    template_id = (resume_data or {}).get("template", "classic")
+    template_file = TEMPLATE_TO_HTML.get(template_id, "classic")
+    resume_html = render_template(f"resume/{template_file}.html", **(resume_data or ResumeModel.default_data()))
 
     def display_name(r):
         return (r.data.get("contacts", {}).get("name") or r.name or "My Resume").replace(" ", "_").upper()

@@ -1,0 +1,155 @@
+/* ── Reusable form styles (Minimalist / Modern SaaS) ────────────────────────── */
+/* Above-label layout, filled background, subtle borders, soft rounded corners */
+/* Load after theme.css */
+
+.rf-form-group,
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.rf-form-group label,
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--rf-text-soft);
+  margin-bottom: 0.4rem;
+}
+
+.rf-form-group input,
+.rf-form-group textarea,
+.rf-form-group select,
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: #eef2f6;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  color: var(--rf-text);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.rf-form-group input::placeholder,
+.rf-form-group textarea::placeholder,
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--rf-muted);
+}
+
+.rf-form-group input:hover,
+.rf-form-group textarea:hover,
+.rf-form-group select:hover,
+.form-group input:hover,
+.form-group textarea:hover,
+.form-group select:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.rf-form-group input:focus,
+.rf-form-group textarea:focus,
+.rf-form-group select:focus,
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--rf-primary);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.rf-form-group textarea,
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Icon-prefixed inputs (e.g. login) */
+.rf-form-group-with-icon,
+.form-group-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.rf-form-group-icon,
+.form-group-icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--rf-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.rf-form-group-with-icon input,
+.rf-form-group-with-icon textarea,
+.form-group-with-icon input,
+.form-group-with-icon textarea {
+  padding-left: 2.75rem;
+}
+
+/* Section hierarchy */
+.rf-section-title,
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+  color: var(--rf-text);
+  letter-spacing: -0.02em;
+}
+
+.rf-section-intro,
+.section-intro {
+  font-size: 0.9rem;
+  color: var(--rf-muted);
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+/* Form layout helpers */
+.rf-form-row-2,
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.rf-form-row-3,
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.rf-form-hint,
+.form-hint {
+  font-size: 0.78rem;
+  color: var(--rf-muted);
+  margin-top: 0.35rem;
+}
+
+/* Standalone form controls */
+.rf-input,
+.rf-select {
+  padding: 0.7rem 1rem;
+  background: #eef2f6;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  color: var(--rf-text);
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rf-input:focus,
+.rf-select:focus {
+  outline: none;
+  border-color: var(--rf-primary);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}

@@ -2,9 +2,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #0f172a;
-  background: #fff;
+  font-family: var(--rf-font);
+  color: var(--rf-text);
+  background: var(--rf-bg);
   -webkit-font-smoothing: antialiased;
 }
 a { text-decoration: none; color: inherit; }
@@ -29,10 +29,10 @@ img { max-width: 100%; display: block; }
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  background: rgba(255,255,255,0.92);
+  background: rgba(255,255,255,0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(226,232,240,0.8);
+  border-bottom: 1px solid var(--rf-border-subtle);
   padding: 0 2rem;
   height: 60px;
   display: flex;
@@ -71,20 +71,20 @@ img { max-width: 100%; display: block; }
   gap: 0.75rem;
 }
 .btn-ghost {
-  padding: 0.45rem 1rem;
-  border-radius: 8px;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--rf-radius-sm);
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--muted);
-  border: 1px solid var(--border);
-  background: #fff;
+  border: 1px solid var(--rf-border-subtle);
+  background: var(--rf-surface);
   cursor: pointer;
   transition: all 0.2s;
 }
 .btn-ghost:hover { color: var(--primary); border-color: var(--primary); }
 .btn-primary {
   padding: 0.5rem 1.2rem;
-  border-radius: 8px;
+  border-radius: var(--rf-radius-sm);
   font-size: 0.875rem;
   font-weight: 600;
   color: #fff;
@@ -392,6 +392,9 @@ img { max-width: 100%; display: block; }
   max-width: 1200px;
   margin: 0 auto;
 }
+.section-inner-wide {
+  max-width: 1400px;
+}
 .section-tag {
   display: inline-block;
   background: var(--primary-light);
@@ -441,12 +444,13 @@ img { max-width: 100%; display: block; }
   z-index: 1;
   text-align: center;
   padding: 2rem 1.5rem;
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid var(--border);
+  background: var(--rf-surface);
+  border-radius: var(--rf-radius-lg);
+  border: 1px solid var(--rf-border-subtle);
+  box-shadow: var(--rf-shadow-sm);
   transition: box-shadow 0.2s, transform 0.2s;
 }
-.step-card:hover { box-shadow: 0 8px 32px rgba(2,132,199,0.12); transform: translateY(-4px); }
+.step-card:hover { box-shadow: var(--rf-shadow-card); transform: translateY(-4px); }
 .step-number {
   width: 48px; height: 48px;
   border-radius: 50%;
@@ -478,13 +482,14 @@ img { max-width: 100%; display: block; }
   gap: 1.5rem;
 }
 .feature-card {
-  background: #fff;
-  border-radius: 16px;
+  background: var(--rf-surface);
+  border-radius: var(--rf-radius-lg);
   padding: 1.75rem 1.5rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--rf-border-subtle);
+  box-shadow: var(--rf-shadow-sm);
   transition: all 0.2s;
 }
-.feature-card:hover { border-color: var(--primary); box-shadow: 0 4px 24px rgba(2,132,199,0.1); }
+.feature-card:hover { border-color: var(--primary); box-shadow: var(--rf-shadow-card); }
 .feature-icon {
   width: 48px; height: 48px;
   border-radius: 12px;
@@ -506,34 +511,37 @@ img { max-width: 100%; display: block; }
 }
 
 /* ── Templates showcase ─────────────────────────────────────────────────────── */
-/* ── Featured 4-template grid (landing page) ───────────────────────────────── */
+/* ── All templates grid (3 columns, larger cards) ──────────────────────────── */
 .featured-tmpl-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
   margin-top: 2.5rem;
+  width: 100%;
 }
 .feat-tmpl-card {
-  border-radius: 14px;
+  border-radius: var(--rf-radius-md);
   overflow: hidden;
-  border: 2px solid var(--border);
-  background: #fff;
+  border: 1px solid var(--rf-border-subtle);
+  background: var(--rf-surface);
   cursor: pointer;
   transition: all 0.22s;
   position: relative;
+  box-shadow: var(--rf-shadow-sm);
 }
 .feat-tmpl-card:hover {
   border-color: var(--primary);
-  box-shadow: 0 10px 40px rgba(2,132,199,0.2);
-  transform: translateY(-5px);
+  box-shadow: var(--rf-shadow-card);
+  transform: translateY(-4px);
 }
 .feat-tmpl-thumb {
-  /* A4 aspect ratio: 595/842 ≈ 0.707, so height = width * 842/595 ≈ width * 1.414 */
+  /* A4 aspect ratio: 595/842 — larger cards in 3-column layout */
   aspect-ratio: 595 / 842;
   overflow: hidden;
   position: relative;
-  background: #f1f5f9;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--rf-bg-subtle);
+  border-bottom: 1px solid var(--rf-border-subtle);
+  min-height: 380px;
 }
 .feat-tmpl-inner {
   /* Dimensions + transform set by JS */
@@ -542,35 +550,17 @@ img { max-width: 100%; display: block; }
   pointer-events: none;
 }
 .feat-tmpl-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(2,132,199,0.88);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.feat-tmpl-card:hover .feat-tmpl-overlay { opacity: 1; }
-.feat-tmpl-overlay span {
-  color: #fff;
-  font-size: 0.82rem;
-  font-weight: 700;
-  background: rgba(255,255,255,0.2);
-  padding: 0.5rem 1.1rem;
-  border-radius: 999px;
-  border: 1.5px solid rgba(255,255,255,0.5);
-  cursor: pointer;
+  display: none; /* No overlay — content stays visible; hover uses dashed border only */
 }
 .feat-tmpl-footer {
-  padding: 0.6rem 0.9rem;
+  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
+  gap: 8px;
 }
 .feat-tmpl-name {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: #334155;
 }
@@ -592,11 +582,11 @@ img { max-width: 100%; display: block; }
   text-decoration: none;
   padding: 0.75rem 2rem;
   border-radius: 999px;
-  border: 2px solid var(--primary);
+  border: 1px solid var(--primary);
   color: var(--primary);
   font-size: 0.9rem;
   font-weight: 700;
-  background: #fff;
+  background: var(--rf-surface);
   transition: all 0.2s;
 }
 .view-more-btn:hover {
@@ -606,10 +596,11 @@ img { max-width: 100%; display: block; }
 }
 
 @media (max-width: 900px) {
-  .featured-tmpl-grid { grid-template-columns: repeat(2, 1fr); }
+  .featured-tmpl-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 }
 @media (max-width: 520px) {
-  .featured-tmpl-grid { grid-template-columns: 1fr; }
+  .featured-tmpl-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  .feat-tmpl-thumb { min-height: 340px; }
 }
 
 /* ── Legacy grid (kept for fallback) ───────────────────────────────────────── */
@@ -845,12 +836,13 @@ img { max-width: 100%; display: block; }
 }
 .modal-overlay.open { display: flex; }
 .modal {
-  background: #fff;
-  border-radius: 20px;
+  background: var(--rf-surface);
+  border-radius: var(--rf-radius-xl);
   padding: 2.5rem;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+  box-shadow: var(--rf-shadow-lg);
+  border: 1px solid var(--rf-border-subtle);
   animation: modal-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 @keyframes modal-in {
@@ -882,13 +874,13 @@ img { max-width: 100%; display: block; }
 .modal-title { font-size: 1.3rem; font-weight: 800; color: var(--dark); margin-bottom: 0.4rem; }
 .modal-sub { font-size: 0.875rem; color: var(--muted); line-height: 1.5; }
 .upload-zone {
-  border: 2px dashed var(--border);
-  border-radius: 14px;
+  border: 2px dashed var(--rf-border);
+  border-radius: var(--rf-radius-md);
   padding: 2.25rem 1.5rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
-  background: var(--surface);
+  background: var(--rf-bg-subtle);
   position: relative;
   overflow: hidden;
   margin-bottom: 1rem;
@@ -929,11 +921,11 @@ img { max-width: 100%; display: block; }
 .btn-skip {
   display: flex; align-items: center; justify-content: center;
   width: 100%; padding: 0.8rem;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
+  border: 1px solid var(--rf-border-subtle);
+  border-radius: var(--rf-radius-md);
   font-size: 0.9rem; font-weight: 600;
   color: var(--muted);
-  background: #fff;
+  background: var(--rf-bg-subtle);
   cursor: pointer;
   transition: all 0.2s;
   gap: 0.4rem;

@@ -40,6 +40,27 @@ except Exception:
     pass
 
 
+# Map client template IDs to Jinja2 HTML template files
+TEMPLATE_TO_HTML = {
+    "classic": "classic",
+    "modern_simple": "minimal",
+    "modern_with_photo": "photo_modern",
+    "chronological": "classic",
+    "functional": "minimal",
+    "hybrid": "modern",
+    "creative": "timeline",
+    "simple_ats": "clean",
+    "two_col_ats": "two_col_light",
+    "polished": "elegant",
+    "minimalist": "minimal",
+    "elegant": "elegant",
+    "teenager": "simple",
+    "internship": "simple",
+    "entry_level": "clean",
+    "career_change": "minimal",
+}
+
+
 def build_pdf(data: dict) -> BytesIO:
     """Render resume HTML and convert to PDF bytes.
 
@@ -51,7 +72,8 @@ def build_pdf(data: dict) -> BytesIO:
             "No PDF engine installed. Run: pip install xhtml2pdf  OR  pip install weasyprint"
         )
 
-    template_name = data.get("template", "classic")
+    template_id = data.get("template", "classic")
+    template_name = TEMPLATE_TO_HTML.get(template_id, "classic")
     html_content = render_template(f"resume/{template_name}.html", **data)
 
     buffer = BytesIO()
@@ -88,11 +110,16 @@ def build_docx(data: dict) -> BytesIO:
     doc.add_paragraph()
 
     # Contact information
+    location = contacts.get("location") or (
+        ", ".join(filter(None, [contacts.get("city"), contacts.get("country")]))
+        if (contacts.get("city") or contacts.get("country")) else None
+    )
     contact_parts = [
-        contacts[field]
-        for field in ("email", "phone", "location")
-        if contacts.get(field)
+        contacts.get("email"),
+        contacts.get("phone") and f"{contacts.get('phoneCode', '')} {contacts.get('phone', '')}".strip(),
+        location,
     ]
+    contact_parts = [p for p in contact_parts if p]
     if contact_parts:
         doc.add_paragraph(" | ".join(contact_parts))
 

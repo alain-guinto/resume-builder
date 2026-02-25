@@ -58,16 +58,33 @@ def _empty_data() -> dict:
     }
 
 
+# Minimum chars to consider extraction successful (resumes typically have 200+ chars)
+_MIN_RESUME_CHARS = 80
+
+
 def _extract_pdf_text(file_bytes: bytes) -> str:
-    """Extract text from PDF using fallback chain: pdfminer → PyMuPDF."""
-    text = _extract_pdf_pdfminer(file_bytes)
-    if text and text.strip():
-        return text
-    text = _extract_pdf_pymupdf(file_bytes)
-    if text and text.strip():
-        log.info("[resume_parser] PyMuPDF succeeded where pdfminer returned empty")
-        return text
-    return text or ""
+    """Extract text from PDF using fallback chain: pdfminer → PyMuPDF → pdfplumber → pypdf."""
+    extractors = [
+        ("pdfminer", _extract_pdf_pdfminer),
+        ("PyMuPDF", _extract_pdf_pymupdf),
+        ("pdfplumber", _extract_pdf_pdfplumber),
+        ("pypdf", _extract_pdf_pypdf),
+    ]
+    best = ""
+    for name, fn in extractors:
+        try:
+            text = fn(file_bytes)
+            if text and len(text.strip()) >= _MIN_RESUME_CHARS:
+                log.info("[resume_parser] PDF extracted with %s (%d chars)", name, len(text))
+                return text.strip()
+            if text and len(text.strip()) > len(best.strip()):
+                best = text
+        except Exception as e:
+            log.debug("[resume_parser] %s failed: %s", name, e)
+    if best and best.strip():
+        log.info("[resume_parser] Using best partial extraction (%d chars)", len(best.strip()))
+        return best.strip()
+    return ""
 
 
 def _extract_pdf_pdfminer(file_bytes: bytes) -> str:
@@ -95,6 +112,40 @@ def _extract_pdf_pymupdf(file_bytes: bytes) -> str:
         return ""
     except Exception as e:
         log.debug("[resume_parser] PyMuPDF failed: %s", e)
+        return ""
+
+
+def _extract_pdf_pdfplumber(file_bytes: bytes) -> str:
+    """Extract using pdfplumber — good for structured/tabular data, built on pdfminer."""
+    try:
+        import pdfplumber
+        with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
+            parts = [page.extract_text() or "" for page in pdf.pages]
+        return "\n".join(p for p in parts if p).strip()
+    except ImportError:
+        log.debug("[resume_parser] pdfplumber not installed (pip install pdfplumber)")
+        return ""
+    except Exception as e:
+        log.debug("[resume_parser] pdfplumber failed: %s", e)
+        return ""
+
+
+def _extract_pdf_pypdf(file_bytes: bytes) -> str:
+    """Extract using pypdf — pure Python, often works when others fail."""
+    try:
+        from pypdf import PdfReader
+        reader = PdfReader(io.BytesIO(file_bytes))
+        parts = []
+        for page in reader.pages:
+            t = page.extract_text()
+            if t:
+                parts.append(t)
+        return "\n".join(parts) if parts else ""
+    except ImportError:
+        log.debug("[resume_parser] pypdf not installed (pip install pypdf)")
+        return ""
+    except Exception as e:
+        log.debug("[resume_parser] pypdf failed: %s", e)
         return ""
 
 
