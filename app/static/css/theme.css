@@ -28,15 +28,34 @@
 }
 
 :root {
+  /* Minimalist / Modern SaaS palette */
   --rf-primary: #0284C7;
   --rf-primary-hover: #0369A1;
   --rf-primary-light: #E0F2FE;
   --rf-accent: #0D9488;
   --rf-accent-hover: #0F766E;
-  --rf-bg: #EFF6FF;
-  --rf-surface: #fff;
+  /* Muted neutral background */
+  --rf-bg: #f8fafc;
+  --rf-bg-subtle: #f1f5f9;
+  --rf-surface: #ffffff;
+  --rf-surface-elevated: #ffffff;
   --rf-muted: #64748b;
+  --rf-muted-soft: #94a3b8;
   --rf-border: #e2e8f0;
+  --rf-border-subtle: #e8ecf2;
   --rf-text: #1e293b;
+  --rf-text-soft: #334155;
   --rf-dark: #0f172a;
+  /* Typography */
+  --rf-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Soft rounded corners */
+  --rf-radius-sm: 10px;
+  --rf-radius-md: 14px;
+  --rf-radius-lg: 18px;
+  --rf-radius-xl: 24px;
+  /* Light elevation */
+  --rf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --rf-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --rf-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --rf-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
 }

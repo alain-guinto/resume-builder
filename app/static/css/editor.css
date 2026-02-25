@@ -14,9 +14,9 @@
     html, body {
       margin: 0;
       padding: 0;
-      font-family: 'DM Sans', -apple-system, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
+      font-family: var(--rf-font);
+      background: var(--rf-bg);
+      color: var(--rf-text);
       min-height: 100vh;
       line-height: 1.5;
       overflow: hidden;
@@ -34,19 +34,60 @@
       min-height: 0;
       overflow: hidden;
     }
-    .left-pane {
-      flex: 0 0 50%;
-      width: 50%;
+    .editor-sidebar {
+      flex: 0 0 auto;
+      width: 200px;
+      min-width: 200px;
       display: flex;
       flex-direction: column;
-      background: #fff;
-      border-right: 1px solid #e2e8f0;
+      background: var(--rf-surface);
+      border-right: 1px solid var(--rf-border-subtle);
+      padding: 1.25rem 0;
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--rf-border-subtle);
+      text-decoration: none;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .sidebar-logo .logo-resume { color: #1e293b; }
+    .sidebar-logo .logo-forge { color: var(--accent); }
+    .sidebar-logo:hover .logo-forge { color: var(--accent-hover); }
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0 0.75rem;
+    }
+    .sidebar-nav .nav-step {
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      flex-direction: row;
+      white-space: nowrap;
+    }
+    .sidebar-nav .nav-step::before { margin-right: 0.5rem; }
+    .sidebar-nav .nav-step:not(:last-child)::after { display: none; }
+    .sidebar-nav .nav-step:hover { background: var(--rf-bg-subtle); }
+    .sidebar-nav .nav-step.active { background: var(--rf-primary-light, #e0f2fe); }
+    .left-pane {
+      flex: 0 0 60%;
+      width: 60%;
+      display: flex;
+      flex-direction: column;
+      background: var(--rf-surface);
+      border-right: 1px solid var(--rf-border-subtle);
       overflow: hidden;
     }
     .left-pane-nav {
       flex-shrink: 0;
-      background: #fff;
-      border-bottom: 1px solid #e2e8f0;
+      background: var(--rf-surface);
+      border-bottom: 1px solid var(--rf-border-subtle);
       padding: 0 1.25rem;
     }
     .left-pane-nav .nav-steps {
@@ -124,37 +165,92 @@
       margin-bottom: 1.25rem;
       line-height: 1.5;
     }
-    .form-group {
-      margin-bottom: 1.25rem;
+    /* Form styles from theme.css; editor-specific overrides below */
+    .editor-panel .form-group input:focus,
+    .editor-panel .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
     }
-    .form-group label {
-      display: block;
-      font-size: 0.875rem;
+
+    /* Month/Year date picker */
+    .date-picker-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+    .date-picker-row .form-group { flex: 1; min-width: 0; margin-bottom: 0; }
+    .date-range-sep {
+      flex-shrink: 0;
+      color: #64748b;
+      font-size: 0.9rem;
       font-weight: 500;
-      color: #334155;
-      margin-bottom: 0.4rem;
     }
-    .form-group input,
-    .form-group textarea {
+    .date-picker-row input[type="month"] {
       width: 100%;
-      padding: 0.6rem 0.85rem;
-      background: #f8fafc;
+      padding: 0.7rem 1rem;
+      background: #eef2f6;
       border: 1px solid #e2e8f0;
-      border-radius: 8px;
+      border-radius: 12px;
       color: #1e293b;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-family: inherit;
+      cursor: pointer;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .form-group input:hover,
-    .form-group textarea:hover { border-color: #cbd5e1; }
-    .form-group input:focus,
-    .form-group textarea:focus {
+    .date-picker-row input[type="month"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    .date-picker-row input[type="month"]:hover { border-color: var(--rf-border); }
+    .date-picker-row input[type="month"]:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+      box-shadow: 0 0 0 3px rgba(2,132,199,0.15);
     }
-    .form-group textarea { min-height: 100px; resize: vertical; }
+    .date-picker-row input[type="month"]:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: #f1f5f9;
+    }
+    .date-picker-row select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: #eef2f6;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      color: #1e293b;
+      font-size: 0.9rem;
+      font-family: inherit;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      padding-right: 2.25rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .date-picker-row select:hover { border-color: var(--rf-border); }
+    .date-picker-row select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(2,132,199,0.15);
+    }
+    .date-picker-row select:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background-color: #f1f5f9;
+    }
+    .date-picker-present {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    .date-picker-present input[type="checkbox"] {
+      width: 1rem;
+      height: 1rem;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .date-picker-present label { cursor: pointer; user-select: none; }
     .photo-upload-area { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .photo-preview-wrap {
       width: 80px; height: 80px; overflow: hidden;
@@ -172,9 +268,53 @@
     .photo-upload-link:hover { text-decoration: underline; }
     .photo-delete-link { color: #ef4444; }
     .photo-delete-link:hover { text-decoration: underline; }
-    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    /* .form-row-2, .form-row-3 from theme.css */
     .form-row-job-photo { display: flex; gap: 1rem; align-items: flex-start; }
     .form-row-job-photo .form-group { flex: 1; }
+    .phone-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: #eef2f6;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .phone-input-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(2,132,199,0.15); }
+    .phone-code-select {
+      flex: 0 0 auto;
+      min-width: 110px;
+      padding: 0.6rem 0.85rem;
+      background: transparent;
+      border: none;
+      color: #1e293b;
+      font-size: 0.9rem;
+      font-family: inherit;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      padding-right: 1.75rem;
+    }
+    .phone-divider {
+      width: 1px;
+      height: 24px;
+      background: #cbd5e1;
+      flex-shrink: 0;
+    }
+    .phone-number-input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.6rem 0.85rem;
+      border: none;
+      background: transparent;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: #1e293b;
+    }
+    .phone-number-input::placeholder { color: #94a3b8; }
+    .phone-number-input:focus { outline: none; }
     .array-item {
       background: #fff;
       border: 1px solid #e2e8f0;
@@ -212,6 +352,25 @@
       width: 100%;
     }
     .btn-add:hover { border-color: var(--accent); color: var(--accent); }
+    .empty-state {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      background: #f8fafc;
+      border: 1px dashed var(--rf-border);
+      border-radius: var(--rf-radius-md);
+      margin-bottom: 1rem;
+    }
+    .empty-state-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--rf-text);
+      margin-bottom: 0.35rem;
+    }
+    .empty-state-hint {
+      font-size: 0.85rem;
+      color: var(--rf-muted);
+      line-height: 1.4;
+    }
     .tips-box {
       background: #fff;
       border: 1px solid #e2e8f0;
@@ -271,11 +430,12 @@
       min-width: 280px;
       display: flex;
       flex-direction: column;
-      background: #fff;
+      background: var(--rf-surface);
       overflow: hidden;
       margin: 1rem 1.25rem 1rem 0.75rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.06);
+      border-radius: var(--rf-radius-md);
+      box-shadow: var(--rf-shadow-card);
+      border: 1px solid var(--rf-border-subtle);
     }
     .preview-header {
       flex-shrink: 0;
@@ -285,8 +445,8 @@
       flex-wrap: wrap;
       gap: 0.2rem;
       padding: 0.12rem 0.65rem;
-      background: #fff;
-      border-bottom: 1px solid #e2e8f0;
+      background: var(--rf-surface);
+      border-bottom: 1px solid var(--rf-border-subtle);
     }
     .right-pane .export-btn { padding: 0.15rem 0.5rem; font-size: 0.72rem; }
     .right-pane .export-btn.secondary { background: #fff; color: #475569; border: 1px solid #e2e8f0; }
@@ -490,8 +650,31 @@
     @media (max-width: 900px) {
       .right-pane { display: none; }
       .body-row { flex-direction: column; }
+      .editor-sidebar {
+        flex-direction: row;
+        width: 100%;
+        min-width: 0;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--rf-border-subtle);
+        gap: 0.5rem;
+      }
+      .sidebar-logo {
+        padding: 0;
+        margin: 0;
+        margin-right: 0.5rem;
+        border-bottom: none;
+        font-size: 1.1rem;
+      }
+      .sidebar-nav {
+        flex: 1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 0;
+        justify-content: flex-start;
+        gap: 0.25rem;
+      }
+      .sidebar-nav .nav-step { padding: 0.4rem 0.5rem; font-size: 0.72rem; }
       .left-pane { flex: 1; width: 100%; min-width: 0; }
-      .left-pane-nav { padding: 0 0.75rem; }
-      .nav-step { flex-shrink: 0; font-size: 0.72rem; }
       .editor-panel { flex: 1; max-width: none; }
+      .form-row-3 { grid-template-columns: 1fr; }
     }

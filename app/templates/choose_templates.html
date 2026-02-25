@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Choose from 24 professional resume templates. Filter by style, columns, and photo support.">
+  <meta name="description" content="Choose from 16 professional resume templates. Filter by style, columns, and photo support.">
   <title>Choose a Resume Template — ResumeForge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/choose_templates.css') }}">
 </head>
 <body>
@@ -88,13 +89,23 @@
         <span class="ct-checkmark"></span>
         Minimal
       </label>
+      <label class="ct-checkbox">
+        <input type="checkbox" name="style" value="ats" id="filter-ats">
+        <span class="ct-checkmark"></span>
+        ATS Optimized
+      </label>
+      <label class="ct-checkbox">
+        <input type="checkbox" name="style" value="starter" id="filter-starter">
+        <span class="ct-checkmark"></span>
+        Starter
+      </label>
     </div>
   </aside>
 
   <!-- Template grid -->
   <div class="ct-content">
     <div class="ct-results-bar">
-      <span class="ct-count" id="resultCount">24 templates</span>
+      <span class="ct-count" id="resultCount">16 templates</span>
     </div>
     <div class="ct-grid" id="ctGrid">
       <!-- Cards injected by JS -->

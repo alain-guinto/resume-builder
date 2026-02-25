@@ -19,6 +19,7 @@ const btnRemoveFile   = document.getElementById('btn-remove-file');
 const btnNext         = document.getElementById('btn-next');
 const localSection    = document.getElementById('local-section');
 const btnLocal        = document.getElementById('btn-local');
+const cloudOptions    = document.getElementById('cloud-source-options');
 const btnGoogleDrive  = document.getElementById('btn-google-drive');
 const btnDropbox      = document.getElementById('btn-dropbox');
 
@@ -86,6 +87,7 @@ function hideProgress() {
 // Source selection
 btnLocal?.addEventListener('click', () => {
   localSection?.classList.add('visible');
+  if (cloudOptions) cloudOptions.style.display = 'none';
 });
 
 btnGoogleDrive?.addEventListener('click', () => {
@@ -147,6 +149,9 @@ function onFileSelected(file) {
 
 function submitFile() {
   if (!selectedFile) return;
+  // Pass selected template to server so editor uses it
+  const tplInput = document.getElementById('selected-template-input');
+  if (tplInput) tplInput.value = sessionStorage.getItem('selectedTemplate') || '';
   // Ensure file is in the input (needed when file came from drag-drop)
   if (fileInput && (fileInput.files.length === 0 || fileInput.files[0] !== selectedFile)) {
     const dt = new DataTransfer();
@@ -160,6 +165,8 @@ function submitFile() {
   btnNext.innerHTML = 'Extracting…';
   showProgress();
   setProgress(30, `Extracting ${selectedFile.name}…`);
+  const overlay = document.getElementById('upload-loading-overlay');
+  if (overlay) overlay.classList.add('visible');
   const form = document.getElementById('upload-form');
   if (form) form.submit();
 }

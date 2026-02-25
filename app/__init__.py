@@ -27,10 +27,18 @@ def create_app(config_name: str = None) -> Flask:
 
     CORS(app)
 
-    # Relax CSP so html2pdf.js and similar libs work (browser extensions may inject strict CSP)
+    # CSP: allow unsafe-eval for html2pdf.js (template-editor) and third-party scripts.
+    # Some browsers/extensions add stricter CSP; we explicitly allow eval for compatibility.
     @app.after_request
     def add_csp(response):
-        csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'"
+        csp = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            "font-src 'self' https://fonts.gstatic.com; "
+            "img-src 'self' data: blob: https:; "
+            "connect-src 'self'"
+        )
         response.headers["Content-Security-Policy"] = csp
         return response
 

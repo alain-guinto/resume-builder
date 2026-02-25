@@ -7,25 +7,29 @@
   <title>Resume Builder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">
 </head>
 <body>
   <a href="#editor-panel" class="skip-link">Skip to editor</a>
   <div class="app">
     <div class="body-row">
+    <aside class="editor-sidebar">
+      <a href="/" class="sidebar-logo" aria-label="ResumeForge home">
+        <span class="logo-resume">Resume</span><span class="logo-forge">Forge</span>
+      </a>
+      <nav class="sidebar-nav" role="navigation" aria-label="Editor steps">
+        <div class="nav-step active" data-step="0">Contacts</div>
+        <div class="nav-step" data-step="1">Experience</div>
+        <div class="nav-step" data-step="2">Education</div>
+        <div class="nav-step" data-step="3">Skills</div>
+        <div class="nav-step" data-step="4">Summary</div>
+        <div class="nav-step" data-step="5">Finalize</div>
+      </nav>
+    </aside>
     <div class="left-pane">
-      <div class="left-pane-nav">
-        <nav class="nav-steps" role="navigation" aria-label="Editor steps">
-          <div class="nav-step active" data-step="0">Contacts</div>
-          <div class="nav-step" data-step="1">Experience</div>
-          <div class="nav-step" data-step="2">Education</div>
-          <div class="nav-step" data-step="3">Skills</div>
-          <div class="nav-step" data-step="4">Summary</div>
-          <div class="nav-step" data-step="5">Additional</div>
-        </nav>
-      </div>
     <main class="editor-panel" id="editor-panel" role="main">
       <!-- Step 0: Contacts (server-rendered values when from upload) -->
       {% set c = (initial_resume_data or {}).get('contacts') or {} %}
@@ -35,6 +39,24 @@
       <section class="editor-section active" data-step="0">
         <h2>Contacts</h2>
         <p class="section-intro">Add your up-to-date contact information so employers and recruiters can easily reach you.</p>
+        <!-- Row 1: Upload photo -->
+        <div class="form-group">
+          <label for="profile-photo-input">Profile photo</label>
+          <div class="photo-upload-area">
+            <div class="photo-preview-wrap">
+              <img id="profile-photo-preview" src="" alt="Profile" class="profile-photo-img" style="display:none;">
+              <div id="profile-photo-placeholder" class="profile-photo-placeholder">
+                <span>No photo</span>
+              </div>
+            </div>
+            <div class="photo-actions">
+              <input type="file" id="profile-photo-input" accept="image/*" style="display:none;">
+              <a class="photo-upload-link" id="btn-upload-photo">↑ Upload new photo</a>
+              <a class="photo-delete-link" id="btn-remove-photo" style="display:none;">Delete photo</a>
+            </div>
+          </div>
+        </div>
+        <!-- Row 2: First name, Last name -->
         <div class="form-row-2">
           <div class="form-group">
             <label for="contact-firstName">First name</label>
@@ -45,69 +67,68 @@
             <input type="text" id="contact-lastName" placeholder="Doe" value="{{ last }}" autocomplete="family-name">
           </div>
         </div>
-        <div class="form-row-job-photo">
+        <!-- Row 3: Desired job title, LinkedIn, Website -->
+        <div class="form-row-3">
           <div class="form-group">
             <label for="contact-jobTitle">Desired job title</label>
             <input type="text" id="contact-jobTitle" placeholder="Software Engineer" value="{{ c.get('jobTitle', '') }}">
           </div>
           <div class="form-group">
-            <label for="profile-photo-input">Profile photo</label>
-            <div class="photo-upload-area">
-              <div class="photo-preview-wrap">
-                <img id="profile-photo-preview" src="" alt="Profile" class="profile-photo-img" style="display:none;">
-                <div id="profile-photo-placeholder" class="profile-photo-placeholder">
-                  <span>No photo</span>
-                </div>
-              </div>
-              <div class="photo-actions">
-                <input type="file" id="profile-photo-input" accept="image/*" style="display:none;">
-                <a class="photo-upload-link" id="btn-upload-photo">↑ Upload new photo</a>
-                <a class="photo-delete-link" id="btn-remove-photo" style="display:none;">Delete photo</a>
-              </div>
-            </div>
+            <label for="contact-linkedin">LinkedIn URL</label>
+            <input type="url" id="contact-linkedin" placeholder="https://linkedin.com/in/username" value="{{ c.get('linkedin', '') }}">
+          </div>
+          <div class="form-group">
+            <label for="contact-website">Website</label>
+            <input type="url" id="contact-website" placeholder="https://yourwebsite.com" value="{{ c.get('website', '') }}">
           </div>
         </div>
+        <!-- Row 4: Phone (code + number with divider), Email -->
         <div class="form-row-2">
           <div class="form-group">
             <label for="contact-phone">Phone</label>
-            <div style="display: flex; gap: 0.5rem;">
-              <select id="contact-phoneCode" style="width: 100px; padding: 0.6rem 0.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; color: #1e293b; font-size: 0.9rem;">
+            <div class="phone-input-wrap">
+              <select id="contact-phoneCode" class="phone-code-select" aria-label="Country code">
                 {% set pc = c.get('phoneCode', '+1') %}
-                <option value="+1" {{ 'selected' if pc == '+1' else '' }}>+1</option>
-                <option value="+44" {{ 'selected' if pc == '+44' else '' }}>+44</option>
-                <option value="+63" {{ 'selected' if pc == '+63' else '' }}>+63</option>
-                <option value="+61" {{ 'selected' if pc == '+61' else '' }}>+61</option>
-                <option value="+49" {{ 'selected' if pc == '+49' else '' }}>+49</option>
-                <option value="+33" {{ 'selected' if pc == '+33' else '' }}>+33</option>
-                <option value="+81" {{ 'selected' if pc == '+81' else '' }}>+81</option>
-                <option value="+86" {{ 'selected' if pc == '+86' else '' }}>+86</option>
-                <option value="+91" {{ 'selected' if pc == '+91' else '' }}>+91</option>
-                <option value="+55" {{ 'selected' if pc == '+55' else '' }}>+55</option>
-                <option value="+52" {{ 'selected' if pc == '+52' else '' }}>+52</option>
-                <option value="+34" {{ 'selected' if pc == '+34' else '' }}>+34</option>
-                <option value="+39" {{ 'selected' if pc == '+39' else '' }}>+39</option>
-                <option value="+31" {{ 'selected' if pc == '+31' else '' }}>+31</option>
-                <option value="+65" {{ 'selected' if pc == '+65' else '' }}>+65</option>
-                <option value="+971" {{ 'selected' if pc == '+971' else '' }}>+971</option>
+                <option value="+1" {{ 'selected' if pc == '+1' else '' }}>🇺🇸 +1</option>
+                <option value="+44" {{ 'selected' if pc == '+44' else '' }}>🇬🇧 +44</option>
+                <option value="+63" {{ 'selected' if pc == '+63' else '' }}>🇵🇭 +63</option>
+                <option value="+61" {{ 'selected' if pc == '+61' else '' }}>🇦🇺 +61</option>
+                <option value="+49" {{ 'selected' if pc == '+49' else '' }}>🇩🇪 +49</option>
+                <option value="+33" {{ 'selected' if pc == '+33' else '' }}>🇫🇷 +33</option>
+                <option value="+81" {{ 'selected' if pc == '+81' else '' }}>🇯🇵 +81</option>
+                <option value="+86" {{ 'selected' if pc == '+86' else '' }}>🇨🇳 +86</option>
+                <option value="+91" {{ 'selected' if pc == '+91' else '' }}>🇮🇳 +91</option>
+                <option value="+55" {{ 'selected' if pc == '+55' else '' }}>🇧🇷 +55</option>
+                <option value="+52" {{ 'selected' if pc == '+52' else '' }}>🇲🇽 +52</option>
+                <option value="+34" {{ 'selected' if pc == '+34' else '' }}>🇪🇸 +34</option>
+                <option value="+39" {{ 'selected' if pc == '+39' else '' }}>🇮🇹 +39</option>
+                <option value="+31" {{ 'selected' if pc == '+31' else '' }}>🇳🇱 +31</option>
+                <option value="+65" {{ 'selected' if pc == '+65' else '' }}>🇸🇬 +65</option>
+                <option value="+971" {{ 'selected' if pc == '+971' else '' }}>🇦🇪 +971</option>
               </select>
-              <input type="tel" id="contact-phone" placeholder="234 567 8900" style="flex: 1;" value="{{ c.get('phone', '') }}" autocomplete="tel">
-          </div>
+              <span class="phone-divider"></span>
+              <input type="tel" id="contact-phone" class="phone-number-input" placeholder="234 567 8900" value="{{ c.get('phone', '') }}" autocomplete="tel">
+            </div>
           </div>
           <div class="form-group">
             <label for="contact-email">Email</label>
             <input type="email" id="contact-email" placeholder="john@example.com" value="{{ c.get('email', '') }}" autocomplete="email">
           </div>
         </div>
+        <!-- Row 5: Country, City (dropdowns with autocomplete) -->
         <div class="form-row-2">
           <div class="form-group">
             <label for="contact-country">Country</label>
-            <input type="text" id="contact-country" placeholder="United States" value="{{ c.get('country', '') }}" autocomplete="country-name">
+            <input type="text" id="contact-country" list="contact-country-list" placeholder="United States" value="{{ c.get('country', '') }}" autocomplete="country-name">
+            <datalist id="contact-country-list"></datalist>
           </div>
           <div class="form-group">
             <label for="contact-city">City</label>
-            <input type="text" id="contact-city" placeholder="City" value="{{ c.get('city', '') }}" autocomplete="address-level2">
+            <input type="text" id="contact-city" list="contact-city-list" placeholder="City" value="{{ c.get('city', '') }}" autocomplete="address-level2">
+            <datalist id="contact-city-list"></datalist>
           </div>
         </div>
+        <!-- Row 6: Address, Postal code -->
         <div class="form-row-2">
           <div class="form-group">
             <label for="contact-address">Address</label>
@@ -118,16 +139,7 @@
             <input type="text" id="contact-postCode" placeholder="Postal / ZIP code" value="{{ c.get('postCode', '') }}" autocomplete="postal-code">
           </div>
         </div>
-        <div class="form-row-2">
-          <div class="form-group">
-            <label for="contact-linkedin">LinkedIn URL</label>
-            <input type="url" id="contact-linkedin" placeholder="https://linkedin.com/in/username" value="{{ c.get('linkedin', '') }}">
-          </div>
-          <div class="form-group">
-            <label for="contact-website">Website</label>
-            <input type="url" id="contact-website" placeholder="https://yourwebsite.com" value="{{ c.get('website', '') }}">
-          </div>
-        </div>
+        <!-- Row 7: Additional information -->
         <div class="form-group">
           <label for="contact-additional">Additional information</label>
           <textarea id="contact-additional" rows="2" placeholder="Any other contact details">{{ c.get('additional', '') }}</textarea>
@@ -336,6 +348,8 @@
   <!-- html2pdf.js not loaded here — avoids CSP eval block; PDF export uses template-editor -->
   <script type="application/json" id="initial-resume-data">{{ (initial_resume_data or {}) | tojson }}</script>
   <script type="application/json" id="editor-flags">{{ {"start_blank": start_blank|default(False)} | tojson }}</script>
+  <script src="{{ url_for('static', filename='js/contacts-data.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/resume-templates.js') }}"></script>
   <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
 </body>
 </html>

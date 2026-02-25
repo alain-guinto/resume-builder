@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
 </head>
 <body>
@@ -243,23 +244,15 @@
 
 <!-- ═══════════════════════════ TEMPLATES ═════════════════════════════════ -->
 <section class="section" id="templates">
-  <div class="section-inner" style="max-width:1200px;">
+  <div class="section-inner section-inner-wide">
     <div class="section-header centered">
       <div class="section-tag">Templates</div>
       <h2 class="section-title">Choose your resume style</h2>
-      <p class="section-sub">24 professionally designed templates — single column, two-column, with or without photo.</p>
+      <p class="section-sub">16 professionally designed templates — single column, two-column, with or without photo.</p>
     </div>
 
-    <!-- 4 featured templates grid (live renders) -->
+    <!-- All templates grid (3 columns, live renders) -->
     <div class="featured-tmpl-grid" id="featuredTmplGrid"></div>
-
-    <!-- View More button -->
-    <div style="text-align:center;margin-top:2rem;">
-      <a href="/templates" class="view-more-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-        View All 24 Templates
-      </a>
-    </div>
   </div>
 </section>
 
@@ -334,21 +327,21 @@
 <script src="{{ url_for('static', filename='js/resume-templates.js') }}"></script>
 <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
 <script>
-// ── Featured 4-template showcase ───────────────────────────────────────────
+// ── All templates showcase (3 columns) ───────────────────────────────────────
 (function () {
   const grid = document.getElementById('featuredTmplGrid');
   if (!grid || typeof TEMPLATE_REGISTRY === 'undefined') return;
 
-  // 4 featured templates to highlight on landing page
-  const FEATURED = [
-    { id: 'classic',     accent: '#1e3a5f', label: 'Classic',       tag: 'Most Popular' },
-    { id: 'modern',      accent: '#334155', label: 'Modern',        tag: 'Two Column' },
-    { id: 'photo_modern',accent: '#0ea5e9', label: 'Photo Modern',  tag: 'With Photo' },
-    { id: 'timeline',    accent: '#7c3aed', label: 'Timeline',      tag: 'Creative' },
-  ];
+  const ACCENT_PALETTE = ['#1e3a5f','#334155','#0d9488','#7c3aed','#0ea5e9','#dc2626','#f59e0b','#10b981'];
+  const TEMPLATE_ORDER = ['classic','modern_simple','modern_with_photo','chronological','functional','hybrid','creative','simple_ats','two_col_ats','polished','minimalist','elegant','teenager','internship','entry_level','career_change'];
 
   const items = [];
-  FEATURED.forEach(({ id, accent, label, tag }) => {
+  TEMPLATE_ORDER.forEach((id, i) => {
+    const info = TEMPLATE_REGISTRY[id];
+    if (!info) return;
+    const accent = ACCENT_PALETTE[i % ACCENT_PALETTE.length];
+    const label = info.name;
+    const tag = info.hasPhoto ? 'With Photo' : (info.cat === 'Two Column' ? 'Two Column' : info.cat);
     const card = document.createElement('div');
     card.className = 'feat-tmpl-card';
 
@@ -362,10 +355,11 @@
     const overlay = document.createElement('div');
     overlay.className = 'feat-tmpl-overlay';
     overlay.innerHTML = '<span>Use This Template</span>';
-    overlay.addEventListener('click', () => {
+    overlay.addEventListener('click', (e) => {
+      e.stopPropagation();
       sessionStorage.setItem('selectedTemplate', id);
       sessionStorage.setItem('selectedAccent', accent);
-      document.getElementById('upload-modal').classList.add('open');
+      window.location.href = '/upload';
     });
     thumb.appendChild(overlay);
 
@@ -378,12 +372,12 @@
     grid.appendChild(card);
     items.push({ id, accent, card, inner, thumb, rendered: false });
 
-    // Click card → open upload modal
+    // Click card → redirect to upload page
     card.addEventListener('click', e => {
       if (e.target.closest('.feat-tmpl-overlay')) return;
       sessionStorage.setItem('selectedTemplate', id);
       sessionStorage.setItem('selectedAccent', accent);
-      document.getElementById('upload-modal').classList.add('open');
+      window.location.href = '/upload';
     });
   });
 
@@ -392,8 +386,8 @@
   const RENDER_W = 595, RENDER_H = 842;
 
   function renderItem(item) {
-    const tw = item.thumb.offsetWidth  || 260;
-    const th = item.thumb.offsetHeight || 347;
+    const tw = item.thumb.offsetWidth  || 360;
+    const th = item.thumb.offsetHeight || 450;
     const scale = Math.min(tw / RENDER_W, th / RENDER_H);
     const sample = getTemplateSample(item.id);
     item.inner.style.cssText = [
@@ -422,8 +416,8 @@
   window.addEventListener('resize', () => {
     items.forEach(item => {
       if (!item.rendered) return;
-      const tw = item.thumb.offsetWidth  || 260;
-      const th = item.thumb.offsetHeight || 347;
+      const tw = item.thumb.offsetWidth  || 360;
+      const th = item.thumb.offsetHeight || 450;
       const scale = Math.min(tw / RENDER_W, th / RENDER_H);
       item.inner.style.transform = `scale(${scale})`;
     });

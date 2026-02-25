@@ -95,12 +95,10 @@
 
   // ── Assign persona per template ────────────────────────────────────────────
   const _PERSONA_MAP = {
-    classic: 0, minimal: 1, executive: 3, clean: 1, bold: 1, corporate: 3,
-    elegant: 2, simple: 4, photo_classic: 0, photo_modern: 2, photo_minimal: 4,
-    photo_executive: 3, modern: 5, two_col_blue: 1, two_col_green: 2,
-    two_col_red: 3, two_col_warm: 4, two_col_light: 5, two_col_photo_blue: 0,
-    two_col_photo_dark: 5, two_col_photo_green: 2, two_col_photo_teal: 1,
-    timeline: 5, infographic: 0,
+    classic: 0, modern_simple: 1, modern_with_photo: 2, chronological: 0,
+    functional: 1, hybrid: 5, creative: 5, simple_ats: 1, two_col_ats: 5,
+    polished: 2, minimalist: 1, elegant: 2, teenager: 4, internship: 4,
+    entry_level: 1, career_change: 1,
   };
 
   function _getSample(id) {
@@ -111,37 +109,24 @@
   // Default sample (first persona)
   const SAMPLE = Object.assign({ template: 'classic', additional: '' }, _P[0]);
 
-  // ── Registry ───────────────────────────────────────────────────────────────
+  // ── Registry (16 templates) ─────────────────────────────────────────────────
   const REGISTRY = {
-    // Single Column – No Photo
-    classic:        { name: 'Classic',        cat: 'Single Column',  hasPhoto: false },
-    minimal:        { name: 'Minimal',        cat: 'Single Column',  hasPhoto: false },
-    executive:      { name: 'Executive',      cat: 'Single Column',  hasPhoto: false },
-    clean:          { name: 'Clean',          cat: 'Single Column',  hasPhoto: false },
-    bold:           { name: 'Bold',           cat: 'Single Column',  hasPhoto: false },
-    corporate:      { name: 'Corporate',      cat: 'Single Column',  hasPhoto: false },
-    elegant:        { name: 'Elegant',        cat: 'Single Column',  hasPhoto: false },
-    simple:         { name: 'Simple',         cat: 'Single Column',  hasPhoto: false },
-    // Single Column – With Photo
-    photo_classic:  { name: 'Photo Classic',  cat: 'Single + Photo', hasPhoto: true  },
-    photo_modern:   { name: 'Photo Modern',   cat: 'Single + Photo', hasPhoto: true  },
-    photo_minimal:  { name: 'Photo Minimal',  cat: 'Single + Photo', hasPhoto: true  },
-    photo_executive:{ name: 'Photo Exec',     cat: 'Single + Photo', hasPhoto: true  },
-    // Two Column – No Photo
-    modern:         { name: 'Modern',         cat: 'Two Column',     hasPhoto: false },
-    two_col_blue:   { name: 'Navy Blue',      cat: 'Two Column',     hasPhoto: false },
-    two_col_green:  { name: 'Forest Green',   cat: 'Two Column',     hasPhoto: false },
-    two_col_red:    { name: 'Burgundy',       cat: 'Two Column',     hasPhoto: false },
-    two_col_warm:   { name: 'Terracotta',     cat: 'Two Column',     hasPhoto: false },
-    two_col_light:  { name: 'Light Sidebar',  cat: 'Two Column',     hasPhoto: false },
-    // Two Column – With Photo
-    two_col_photo_blue:  { name: 'Blue + Photo',   cat: 'Two Col + Photo', hasPhoto: true },
-    two_col_photo_dark:  { name: 'Dark + Photo',   cat: 'Two Col + Photo', hasPhoto: true },
-    two_col_photo_green: { name: 'Green + Photo',  cat: 'Two Col + Photo', hasPhoto: true },
-    two_col_photo_teal:  { name: 'Teal + Photo',   cat: 'Two Col + Photo', hasPhoto: true },
-    // Special
-    timeline:    { name: 'Timeline',    cat: 'Special', hasPhoto: false },
-    infographic: { name: 'Infographic', cat: 'Special', hasPhoto: false },
+    classic:           { name: 'Classic',           cat: 'Professional',  hasPhoto: false },
+    modern_simple:    { name: 'Modern Simple',    cat: 'Professional',  hasPhoto: false },
+    modern_with_photo:{ name: 'Modern with Photo',cat: 'Professional',  hasPhoto: true  },
+    chronological:    { name: 'Chronological',    cat: 'Professional',  hasPhoto: false },
+    functional:       { name: 'Functional',       cat: 'Professional',  hasPhoto: false },
+    hybrid:           { name: 'Hybrid',           cat: 'Two Column',    hasPhoto: false },
+    creative:         { name: 'Creative',         cat: 'Creative',       hasPhoto: false },
+    simple_ats:       { name: 'Simple ATS',       cat: 'ATS Optimized', hasPhoto: false },
+    two_col_ats:      { name: 'Two Column ATS',  cat: 'ATS Optimized', hasPhoto: false },
+    polished:         { name: 'Polished',         cat: 'Professional',  hasPhoto: false },
+    minimalist:       { name: 'Minimalist',       cat: 'Minimal',       hasPhoto: false },
+    elegant:          { name: 'Elegant',           cat: 'Professional',  hasPhoto: false },
+    teenager:        { name: 'Teenager',           cat: 'Starter',       hasPhoto: false },
+    internship:       { name: 'Internship',       cat: 'Starter',       hasPhoto: false },
+    entry_level:      { name: 'Entry-Level',      cat: 'Starter',       hasPhoto: false },
+    career_change:    { name: 'Career Change',    cat: 'Professional',  hasPhoto: false },
   };
 
   // ── Shared Helpers ─────────────────────────────────────────────────────────
@@ -238,9 +223,38 @@
   }
 
   function _sec(title, content, accent, style, margin) {
-    if (!content) return '';
     const m = margin || '0 0 1.1rem';
-    return `<section style="margin:${m};">${_secTitle(title, accent, style)}${content}</section>`;
+    const placeholder = `<p style="font-size:8.5pt;color:#94a3b8;font-style:italic;margin:0;">Add your ${title.toLowerCase()} here.</p>`;
+    const body = (content && String(content).trim()) ? content : placeholder;
+    return `<section style="margin:${m};">${_secTitle(title, accent, style)}${body}</section>`;
+  }
+
+  // Section content map for dynamic ordering (template-editor drag-and-drop)
+  const _sectionMap = {
+    summary:        { title: 'Summary',        content: d => d.summary ? `<p style="font-size:9pt;color:#475569;">${d.summary}</p>` : '' },
+    experience:     { title: 'Experience',     content: d => _expPlain(d.experience) },
+    education:      { title: 'Education',      content: d => _edu(d.education) },
+    skills:         { title: 'Skills',         content: d => _skills(d.skills, null, null, null) },
+    languages:      { title: 'Languages',      content: d => _langs(d.languages, null) },
+    certifications: { title: 'Certifications', content: d => d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '' },
+    awards:         { title: 'Awards',         content: d => d.awards ? `<p style="font-size:9pt;color:#555;">${d.awards}</p>` : '' },
+    details:        { title: 'Additional',     content: d => d.additional ? `<p style="font-size:9pt;color:#555;">${d.additional}</p>` : '' },
+    contact:        { title: 'Contact',        content: d => _contactRow(d.contacts || {}, ' · ') },
+  };
+  function _buildSectionsInOrder(keys, d, ac, secStyle, overrides) {
+    if (!keys || !keys.length) return '';
+    const map = overrides ? { ..._sectionMap, ...overrides } : _sectionMap;
+    return keys.map(key => {
+      const meta = map[key];
+      if (!meta) return '';
+      const content = meta.content(d);
+      return _sec(meta.title, content, ac, secStyle);
+    }).join('');
+  }
+
+  function _sectionsFromOrder(sectionOrder, d, ac, secStyle, overrides) {
+    if (!sectionOrder || sectionOrder.type !== 'single' || !sectionOrder.columns || !sectionOrder.columns[0]) return null;
+    return _buildSectionsInOrder(sectionOrder.columns[0], d, ac, secStyle, overrides);
   }
 
   function _contactRow(c, sep, color) {
@@ -252,144 +266,221 @@
   // SINGLE COLUMN — NO PHOTO
   // ─────────────────────────────────────────────────────────────────────────
 
-  function tClassic(d, ac, fo, sp) {
+  function tClassic(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
+    const so = opts && opts.sectionOrder;
+    const sections = so ? _sectionsFromOrder(so, d, ac, 'bar') : null;
+    const body = sections != null ? sections : [
+      _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#475569;">${d.summary}</p>` : '', ac, 'bar'),
+      _sec('Experience', _expPlain(d.experience), ac, 'bar'),
+      _sec('Education', _edu(d.education), ac, 'bar'),
+      _sec('Skills', _skills(d.skills), ac, 'bar'),
+      _sec('Languages', _langs(d.languages, ac), ac, 'bar'),
+      _sec('Certifications', d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '', ac, 'bar'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};color:#1a1a1a;font-size:10pt;background:#fff;padding:2rem;">
-      <h1 style="font-size:20pt;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;margin:0;">${c.name || 'Your Name'}</h1>
-      <p style="font-size:10pt;color:#64748b;margin:4px 0 6px;">${c.jobTitle || 'Job Title'}</p>
-      <div style="margin-bottom:6px;">${_contactRow(c, ' · ')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:0.5rem;">
+        <div style="flex:1;">
+          <h1 style="font-size:20pt;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;margin:0;">${c.name || 'Your Name'}</h1>
+          <p style="font-size:10pt;color:#64748b;margin:4px 0 6px;">${c.jobTitle || 'Job Title'}</p>
+          <div style="margin-bottom:6px;">${_contactRow(c, ' · ')}</div>
+        </div>
+        ${_photo(c.photoUrl, 90, '50%', 'flex-shrink:0;border:3px solid ' + ac + ';')}
+      </div>
       <div style="height:4px;background:${ac};margin:8px 0 1.25rem;border-radius:2px;"></div>
-      ${_sec('Summary', d.summary ? `<p style="font-size:9pt;color:#475569;">${d.summary}</p>` : '', ac, 'bar')}
-      ${_sec('Experience', _expPlain(d.experience), ac, 'bar')}
-      ${_sec('Education', _edu(d.education), ac, 'bar')}
-      ${_sec('Skills', _skills(d.skills), ac, 'bar')}
-      ${_sec('Languages', _langs(d.languages, ac), ac, 'bar')}
-      ${d.certifications ? _sec('Certifications', `<p style="font-size:9pt;color:#555;">${d.certifications}</p>`, ac, 'bar') : ''}
+      ${body}
     </div>`;
   }
 
-  function tMinimal(d, ac, fo, sp) {
+  function tMinimal(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const contact = _contactRow(c, '  ·  ', '#888');
+    const so = opts && opts.sectionOrder;
+    const sections = so ? _sectionsFromOrder(so, d, ac, 'track') : null;
+    const body = sections != null ? sections : [
+      _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', ac, 'track'),
+      _sec('Experience', _expPlain(d.experience), ac, 'track'),
+      _sec('Education', _edu(d.education), ac, 'track'),
+      _sec('Skills', (d.skills || []).length ? `<p style="font-size:9pt;color:#555;">${(d.skills || []).join(', ')}</p>` : '', ac, 'track'),
+      _sec('Languages', _langs(d.languages, ac), ac, 'track'),
+      _sec('Certifications', d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '', ac, 'track'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};color:#1a1a1a;font-size:10pt;background:#fff;padding:2.5rem 2rem;">
       <div style="text-align:center;padding-bottom:1.25rem;border-bottom:1px solid ${ac};margin-bottom:1.5rem;">
+        ${_photo(c.photoUrl, 80, '50%', 'margin:0 auto 10px;display:block;border:2px solid #e2e8f0;')}
         <h1 style="font-size:22pt;font-weight:300;letter-spacing:0.08em;margin:0;">${c.name || 'Your Name'}</h1>
         <p style="font-size:10pt;color:#888;margin:5px 0;">${c.jobTitle || ''}</p>
         <div>${contact}</div>
       </div>
-      ${_sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', ac, 'track')}
-      ${_sec('Experience', _expPlain(d.experience), ac, 'track')}
-      ${_sec('Education', _edu(d.education), ac, 'track')}
-      ${_sec('Skills', `<p style="font-size:9pt;color:#555;">${(d.skills || []).join(', ')}</p>`, ac, 'track')}
-      ${_sec('Languages', _langs(d.languages, ac), ac, 'track')}
-      ${d.certifications ? _sec('Certifications', `<p style="font-size:9pt;color:#555;">${d.certifications}</p>`, ac, 'track') : ''}
+      ${body}
     </div>`;
   }
 
-  function tExecutive(d, ac, fo, sp) {
+  function tExecutive(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const accent2 = ac || '#1a2744';
+    const execOverrides = { summary: { title: 'Professional Summary', content: d => d.summary ? `<p style="font-size:9pt;color:#555;line-height:1.6;">${d.summary}</p>` : '' }, experience: { title: 'Professional Experience', content: d => _expPlain(d.experience) }, skills: { title: 'Core Competencies', content: d => _skills(d.skills, '#eef2ff', accent2) }, certifications: { title: 'Certifications & Licences', content: d => d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '' } };
+    const so = opts && opts.sectionOrder;
+    const sections = so ? _sectionsFromOrder(so, d, accent2, 'track', execOverrides) : null;
+    const body = sections != null ? sections : [
+      _sec('Professional Summary', d.summary ? `<p style="font-size:9pt;color:#555;line-height:1.6;">${d.summary}</p>` : '', accent2, 'track'),
+      _sec('Professional Experience', _expPlain(d.experience), accent2, 'track'),
+      _sec('Education', _edu(d.education), accent2, 'track'),
+      _sec('Core Competencies', _skills(d.skills, '#eef2ff', accent2), accent2, 'track'),
+      _sec('Languages', _langs(d.languages, accent2), accent2, 'track'),
+      _sec('Certifications & Licences', d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '', accent2, 'track'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};color:#1a1a1a;font-size:10pt;background:#fff;padding:2.5rem 2rem;">
-      <div style="border-bottom:3px solid ${accent2};padding-bottom:1rem;margin-bottom:1.5rem;">
-        <h1 style="font-size:24pt;font-weight:700;color:${accent2};letter-spacing:-0.01em;margin:0;">${c.name || 'Your Name'}</h1>
-        <p style="font-size:11pt;color:#64748b;margin:4px 0 8px;">${c.jobTitle || ''}</p>
-        <div>${_contactRow(c, '  |  ', '#888')}</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;border-bottom:3px solid ${accent2};padding-bottom:1rem;margin-bottom:1.5rem;">
+        <div style="flex:1;">
+          <h1 style="font-size:24pt;font-weight:700;color:${accent2};letter-spacing:-0.01em;margin:0;">${c.name || 'Your Name'}</h1>
+          <p style="font-size:11pt;color:#64748b;margin:4px 0 8px;">${c.jobTitle || ''}</p>
+          <div>${_contactRow(c, '  |  ', '#888')}</div>
+        </div>
+        ${_photo(c.photoUrl, 90, '4px', 'flex-shrink:0;border:2px solid ' + accent2 + ';')}
       </div>
-      ${_sec('Professional Summary', d.summary ? `<p style="font-size:9pt;color:#555;line-height:1.6;">${d.summary}</p>` : '', accent2, 'track')}
-      ${_sec('Professional Experience', _expPlain(d.experience), accent2, 'track')}
-      ${_sec('Education', _edu(d.education), accent2, 'track')}
-      ${_sec('Core Competencies', _skills(d.skills, '#eef2ff', accent2), accent2, 'track')}
-      ${_sec('Languages', _langs(d.languages, accent2), accent2, 'track')}
-      ${d.certifications ? _sec('Certifications & Licences', `<p style="font-size:9pt;color:#555;">${d.certifications}</p>`, accent2, 'track') : ''}
+      ${body}
     </div>`;
   }
 
-  function tClean(d, ac, fo, sp) {
+  function tClean(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const accent2 = ac || '#475569';
+    const cleanOverrides = { summary: { title: 'About', content: d => d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '' }, skills: { title: 'Skills', content: d => _skills(d.skills, '#f8fafc', '#475569', '3px') }, languages: { title: 'Languages', content: d => _langs(d.languages, accent2) } };
+    const so = opts && opts.sectionOrder;
+    const sections = so ? _sectionsFromOrder(so, d, accent2, 'light', cleanOverrides) : null;
+    const body = sections != null ? sections : [
+      _sec('About', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'light'),
+      _sec('Experience', _expPlain(d.experience), accent2, 'light'),
+      _sec('Education', _edu(d.education), accent2, 'light'),
+      _sec('Skills', _skills(d.skills, '#f8fafc', '#475569', '3px'), accent2, 'light'),
+      _sec('Languages', _langs(d.languages, accent2), accent2, 'light'),
+      _sec('Certifications', d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '', accent2, 'light'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};color:#1a1a1a;font-size:10pt;background:#fff;padding:2.5rem 2.5rem;">
-      <h1 style="font-size:21pt;font-weight:600;margin:0;color:#111;">${c.name || 'Your Name'}</h1>
-      <p style="font-size:10pt;color:#888;margin:3px 0 10px;">${c.jobTitle || ''}</p>
-      <p style="font-size:8.5pt;color:#aaa;margin-bottom:1.5rem;">${_contactRow(c, ' · ', '#aaa')}</p>
-      ${_sec('About', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'light')}
-      ${_sec('Experience', _expPlain(d.experience), accent2, 'light')}
-      ${_sec('Education', _edu(d.education), accent2, 'light')}
-      ${_sec('Skills', _skills(d.skills, '#f8fafc', '#475569', '3px'), accent2, 'light')}
-      ${_sec('Languages', _langs(d.languages, accent2), accent2, 'light')}
-      ${d.certifications ? _sec('Certifications', `<p style="font-size:9pt;color:#555;">${d.certifications}</p>`, accent2, 'light') : ''}
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1.5rem;">
+        <div style="flex:1;">
+          <h1 style="font-size:21pt;font-weight:600;margin:0;color:#111;">${c.name || 'Your Name'}</h1>
+          <p style="font-size:10pt;color:#888;margin:3px 0 10px;">${c.jobTitle || ''}</p>
+          <p style="font-size:8.5pt;color:#aaa;margin:0;">${_contactRow(c, ' · ', '#aaa')}</p>
+        </div>
+        ${_photo(c.photoUrl, 80, '50%', 'flex-shrink:0;border:2px solid #e2e8f0;')}
+      </div>
+      ${body}
     </div>`;
   }
 
-  function tBold(d, ac, fo, sp) {
+  function tBold(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const accent2 = ac || '#111827';
+    const so = opts && opts.sectionOrder;
+    const sections = so ? _sectionsFromOrder(so, d, accent2, 'bold', { skills: { title: 'Skills', content: d => _skills(d.skills, '#f3f4f6', '#111', '4px') }, languages: { title: 'Languages', content: d => _langs(d.languages, accent2) } }) : null;
+    const body = sections != null ? sections : [
+      _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'bold'),
+      _sec('Experience', _expPlain(d.experience), accent2, 'bold'),
+      _sec('Education', _edu(d.education), accent2, 'bold'),
+      _sec('Skills', _skills(d.skills, '#f3f4f6', '#111', '4px'), accent2, 'bold'),
+      _sec('Languages', _langs(d.languages, accent2), accent2, 'bold'),
+      _sec('Certifications', d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '', accent2, 'bold'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};color:#1a1a1a;font-size:10pt;background:#fff;padding:2rem;">
-      <div style="background:${accent2};padding:1.5rem 2rem;margin:-2rem -2rem 1.5rem;">
-        <h1 style="font-size:26pt;font-weight:900;color:#fff;letter-spacing:-0.02em;margin:0;">${c.name || 'Your Name'}</h1>
-        <p style="font-size:11pt;color:rgba(255,255,255,0.75);margin:4px 0;">${c.jobTitle || ''}</p>
-        <p style="font-size:8pt;color:rgba(255,255,255,0.55);margin-top:5px;">${_contactRow(c, ' · ', 'rgba(255,255,255,0.6)')}</p>
+      <div style="background:${accent2};padding:1.5rem 2rem;margin:-2rem -2rem 1.5rem;display:flex;align-items:center;gap:1.25rem;">
+        ${_photo(c.photoUrl, 80, '50%', 'flex-shrink:0;border:3px solid rgba(255,255,255,0.5);')}
+        <div style="flex:1;">
+          <h1 style="font-size:26pt;font-weight:900;color:#fff;letter-spacing:-0.02em;margin:0;">${c.name || 'Your Name'}</h1>
+          <p style="font-size:11pt;color:rgba(255,255,255,0.75);margin:4px 0;">${c.jobTitle || ''}</p>
+          <p style="font-size:8pt;color:rgba(255,255,255,0.55);margin-top:5px;">${_contactRow(c, ' · ', 'rgba(255,255,255,0.6)')}</p>
+        </div>
       </div>
-      ${_sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'bold')}
-      ${_sec('Experience', _expPlain(d.experience), accent2, 'bold')}
-      ${_sec('Education', _edu(d.education), accent2, 'bold')}
-      ${_sec('Skills', _skills(d.skills, '#f3f4f6', '#111', '4px'), accent2, 'bold')}
-      ${_sec('Languages', _langs(d.languages, accent2), accent2, 'bold')}
-      ${d.certifications ? _sec('Certifications', `<p style="font-size:9pt;color:#555;">${d.certifications}</p>`, accent2, 'bold') : ''}
+      ${body}
     </div>`;
   }
 
-  function tCorporate(d, ac, fo, sp) {
+  function tCorporate(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const accent2 = ac || '#374151';
+    const so = opts && opts.sectionOrder;
+    const corpOverrides = { skills: { title: 'Skills', content: d => _skills(d.skills, '#f3f4f6', '#374151', '4px') }, languages: { title: 'Languages', content: d => _langs(d.languages, accent2) } };
+    const sections = so ? _sectionsFromOrder(so, d, accent2, 'bar', corpOverrides) : null;
+    const body = sections != null ? sections : [
+      _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'bar'),
+      _sec('Experience', _expPlain(d.experience), accent2, 'bar'),
+      _sec('Education', _edu(d.education), accent2, 'bar'),
+      _sec('Skills', _skills(d.skills, '#f3f4f6', '#374151', '4px'), accent2, 'bar'),
+      _sec('Languages', _langs(d.languages, accent2), accent2, 'bar'),
+      _sec('Certifications', d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '', accent2, 'bar'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};color:#1a1a1a;font-size:10pt;background:#f9fafb;padding:0;">
-      <div style="background:#fff;padding:1.5rem 2rem;border-bottom:2px solid ${accent2};">
-        <h1 style="font-size:20pt;font-weight:700;color:${accent2};margin:0;">${c.name || 'Your Name'}</h1>
-        <p style="font-size:10pt;color:#6b7280;margin:3px 0 8px;">${c.jobTitle || ''}</p>
-        <div>${_contactRow(c, '  |  ', '#6b7280')}</div>
+      <div style="background:#fff;padding:1.5rem 2rem;border-bottom:2px solid ${accent2};display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+        <div style="flex:1;">
+          <h1 style="font-size:20pt;font-weight:700;color:${accent2};margin:0;">${c.name || 'Your Name'}</h1>
+          <p style="font-size:10pt;color:#6b7280;margin:3px 0 8px;">${c.jobTitle || ''}</p>
+          <div>${_contactRow(c, '  |  ', '#6b7280')}</div>
+        </div>
+        ${_photo(c.photoUrl, 80, '4px', 'flex-shrink:0;border:2px solid #e5e7eb;')}
       </div>
       <div style="padding:1.5rem 2rem;">
-      ${_sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'bar')}
-      ${_sec('Experience', _expPlain(d.experience), accent2, 'bar')}
-      ${_sec('Education', _edu(d.education), accent2, 'bar')}
-      ${_sec('Skills', _skills(d.skills, '#f3f4f6', '#374151', '4px'), accent2, 'bar')}
-      ${_sec('Languages', _langs(d.languages, accent2), accent2, 'bar')}
-      ${d.certifications ? _sec('Certifications', `<p style="font-size:9pt;color:#555;">${d.certifications}</p>`, accent2, 'bar') : ''}
+      ${body}
       </div>
     </div>`;
   }
 
-  function tElegant(d, ac, fo, sp) {
+  function tElegant(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const accent2 = ac || '#92400e';
+    const elegantOverrides = { summary: { title: 'Profile', content: d => d.summary ? `<p style="font-size:9pt;color:#666;font-style:italic;">${d.summary}</p>` : '' }, skills: { title: 'Skills', content: d => _skills(d.skills, '#fef3c7', accent2, '3px') }, languages: { title: 'Languages', content: d => _langs(d.languages, accent2) }, certifications: { title: 'Certifications', content: d => d.certifications ? `<p style="font-size:9pt;color:#666;">${d.certifications}</p>` : '' } };
+    const so = opts && opts.sectionOrder;
+    const sections = so ? _sectionsFromOrder(so, d, accent2, 'elegant', elegantOverrides) : null;
+    const body = sections != null ? sections : [
+      _sec('Profile', d.summary ? `<p style="font-size:9pt;color:#666;font-style:italic;">${d.summary}</p>` : '', accent2, 'elegant'),
+      _sec('Experience', _expPlain(d.experience), accent2, 'elegant'),
+      _sec('Education', _edu(d.education), accent2, 'elegant'),
+      _sec('Skills', _skills(d.skills, '#fef3c7', accent2, '3px'), accent2, 'elegant'),
+      _sec('Languages', _langs(d.languages, accent2), accent2, 'elegant'),
+      _sec('Certifications', d.certifications ? `<p style="font-size:9pt;color:#666;">${d.certifications}</p>` : '', accent2, 'elegant'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};color:#1a1a1a;font-size:10pt;background:#fffdf8;padding:2.5rem 2rem;">
       <div style="text-align:center;margin-bottom:1.5rem;">
+        ${_photo(c.photoUrl, 80, '50%', 'margin:0 auto 10px;display:block;border:2px solid #fef3c7;')}
         <h1 style="font-size:22pt;font-weight:300;letter-spacing:0.06em;color:${accent2};margin:0;">${c.name || 'Your Name'}</h1>
         <div style="height:1px;background:${accent2};width:60px;margin:8px auto;opacity:0.4;"></div>
         <p style="font-size:10pt;color:#888;margin:4px 0;">${c.jobTitle || ''}</p>
         <p style="font-size:8.5pt;color:#aaa;">${_contactRow(c, '  ·  ', '#bbb')}</p>
       </div>
-      ${_sec('Profile', d.summary ? `<p style="font-size:9pt;color:#666;font-style:italic;">${d.summary}</p>` : '', accent2, 'elegant')}
-      ${_sec('Experience', _expPlain(d.experience), accent2, 'elegant')}
-      ${_sec('Education', _edu(d.education), accent2, 'elegant')}
-      ${_sec('Skills', _skills(d.skills, '#fef3c7', accent2, '3px'), accent2, 'elegant')}
-      ${_sec('Languages', _langs(d.languages, accent2), accent2, 'elegant')}
-      ${d.certifications ? _sec('Certifications', `<p style="font-size:9pt;color:#666;">${d.certifications}</p>`, accent2, 'elegant') : ''}
+      ${body}
     </div>`;
   }
 
-  function tSimple(d, ac, fo, sp) {
+  function tSimple(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
+    const so = opts && opts.sectionOrder;
+    const simpleOverrides = { skills: { title: 'Skills', content: d => (d.skills || []).length ? `<p style="font-size:9pt;color:#555;">${(d.skills || []).join(' · ')}</p>` : '' }, languages: { title: 'Languages', content: d => _langs(d.languages, '#555') } };
+    const sections = so ? _sectionsFromOrder(so, d, '#222', 'default', simpleOverrides) : null;
+    const body = sections != null ? sections : [
+      _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#444;margin:0;">${d.summary}</p>` : '', '#222', 'default'),
+      _sec('Experience', _expPlain(d.experience), '#222', 'default'),
+      _sec('Education', _edu(d.education), '#222', 'default'),
+      _sec('Skills', (d.skills || []).length ? `<p style="font-size:9pt;color:#555;">${(d.skills || []).join(' · ')}</p>` : '', '#222', 'default'),
+      _sec('Languages', _langs(d.languages, '#555'), '#222', 'default'),
+    ].join('');
+    const defaultBody = _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#444;margin:0;">${d.summary}</p>` : '', '#222', 'default') +
+      '<hr style="border:none;border-top:1px solid #e5e7eb;margin-bottom:1.25rem;">' +
+      _sec('Experience', _expPlain(d.experience), '#222', 'default') +
+      '<hr style="border:none;border-top:1px solid #f3f4f6;margin-bottom:1.25rem;">' +
+      _sec('Education', _edu(d.education), '#222', 'default') +
+      _sec('Skills', (d.skills || []).length ? `<p style="font-size:9pt;color:#555;">${(d.skills || []).join(' · ')}</p>` : '', '#222', 'default') +
+      _sec('Languages', _langs(d.languages, '#555'), '#222', 'default');
+    const content = sections != null ? body : defaultBody;
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};color:#222;font-size:10pt;background:#fff;padding:2rem 2.5rem;">
-      <h1 style="font-size:18pt;font-weight:700;margin:0;">${c.name || 'Your Name'}</h1>
-      <p style="font-size:9.5pt;color:#555;margin:3px 0 5px;">${c.jobTitle || ''}</p>
-      <p style="font-size:8pt;color:#888;margin-bottom:1.25rem;">${_contactRow(c, ' · ', '#999')}</p>
-      ${d.summary ? `<p style="font-size:9pt;color:#444;margin-bottom:1.25rem;">${d.summary}</p>` : ''}
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin-bottom:1.25rem;">
-      ${_sec('Experience', _expPlain(d.experience), '#222', 'default')}
-      <hr style="border:none;border-top:1px solid #f3f4f6;margin-bottom:1.25rem;">
-      ${_sec('Education', _edu(d.education), '#222', 'default')}
-      ${_sec('Skills', `<p style="font-size:9pt;color:#555;">${(d.skills || []).join(' · ')}</p>`, '#222', 'default')}
-      ${_sec('Languages', _langs(d.languages, '#555'), '#222', 'default')}
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1.25rem;">
+        <div style="flex:1;">
+          <h1 style="font-size:18pt;font-weight:700;margin:0;">${c.name || 'Your Name'}</h1>
+          <p style="font-size:9.5pt;color:#555;margin:3px 0 5px;">${c.jobTitle || ''}</p>
+          <p style="font-size:8pt;color:#888;margin:0;">${_contactRow(c, ' · ', '#999')}</p>
+        </div>
+        ${_photo(c.photoUrl, 72, '50%', 'flex-shrink:0;border:2px solid #e5e7eb;')}
+      </div>
+      ${content}
     </div>`;
   }
 
@@ -397,8 +488,18 @@
   // SINGLE COLUMN — WITH PHOTO
   // ─────────────────────────────────────────────────────────────────────────
 
-  function tPhotoClassic(d, ac, fo, sp) {
+  function tPhotoClassic(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
+    const so = opts && opts.sectionOrder;
+    const overrides = { skills: { title: 'Skills', content: d => _skills(d.skills, '#eff6ff', ac) }, languages: { title: 'Languages', content: d => _langs(d.languages, ac) } };
+    const sections = so ? _sectionsFromOrder(so, d, ac, 'bar', overrides) : null;
+    const body = sections != null ? sections : [
+      _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#475569;">${d.summary}</p>` : '', ac, 'bar'),
+      _sec('Experience', _expPlain(d.experience), ac, 'bar'),
+      _sec('Education', _edu(d.education), ac, 'bar'),
+      _sec('Skills', _skills(d.skills, '#eff6ff', ac), ac, 'bar'),
+      _sec('Languages', _langs(d.languages, ac), ac, 'bar'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};background:#fff;padding:2rem;color:#1a1a1a;font-size:10pt;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:0.5rem;">
         <div style="flex:1;">
@@ -409,17 +510,23 @@
         ${_photo(c.photoUrl, 90, '50%', 'flex-shrink:0;border:3px solid ' + ac + ';')}
       </div>
       <div style="height:4px;background:${ac};margin:10px 0 1.25rem;border-radius:2px;"></div>
-      ${_sec('Summary', d.summary ? `<p style="font-size:9pt;color:#475569;">${d.summary}</p>` : '', ac, 'bar')}
-      ${_sec('Experience', _expPlain(d.experience), ac, 'bar')}
-      ${_sec('Education', _edu(d.education), ac, 'bar')}
-      ${_sec('Skills', _skills(d.skills, '#eff6ff', ac), ac, 'bar')}
-      ${_sec('Languages', _langs(d.languages, ac), ac, 'bar')}
+      ${body}
     </div>`;
   }
 
-  function tPhotoModern(d, ac, fo, sp) {
+  function tPhotoModern(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const accent2 = ac || '#0ea5e9';
+    const so = opts && opts.sectionOrder;
+    const overrides = { experience: { title: 'Experience', content: d => _exp(d.experience, accent2, accent2, '#64748b') }, skills: { title: 'Skills', content: d => _skills(d.skills, '#e0f2fe', accent2) }, languages: { title: 'Languages', content: d => _langs(d.languages, accent2) } };
+    const sections = so ? _sectionsFromOrder(so, d, accent2, 'bar', overrides) : null;
+    const body = sections != null ? sections : [
+      _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'bar'),
+      _sec('Experience', _exp(d.experience, accent2, accent2, '#64748b'), accent2, 'bar'),
+      _sec('Education', _edu(d.education), accent2, 'bar'),
+      _sec('Skills', _skills(d.skills, '#e0f2fe', accent2), accent2, 'bar'),
+      _sec('Languages', _langs(d.languages, accent2), accent2, 'bar'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};background:#fff;color:#1a1a1a;font-size:10pt;">
       <div style="background:linear-gradient(135deg,${accent2},${accent2}dd);padding:1.75rem 2rem;display:flex;align-items:center;gap:1.25rem;">
         ${_photo(c.photoUrl, 80, '50%', 'border:3px solid rgba(255,255,255,0.8);flex-shrink:0;')}
@@ -430,18 +537,24 @@
         </div>
       </div>
       <div style="padding:1.75rem 2rem;">
-      ${_sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'bar')}
-      ${_sec('Experience', _exp(d.experience, accent2, accent2, '#64748b'), accent2, 'bar')}
-      ${_sec('Education', _edu(d.education), accent2, 'bar')}
-      ${_sec('Skills', _skills(d.skills, '#e0f2fe', accent2), accent2, 'bar')}
-      ${_sec('Languages', _langs(d.languages, accent2), accent2, 'bar')}
+      ${body}
       </div>
     </div>`;
   }
 
-  function tPhotoMinimal(d, ac, fo, sp) {
+  function tPhotoMinimal(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const accent2 = ac || '#334155';
+    const so = opts && opts.sectionOrder;
+    const overrides = { skills: { title: 'Skills', content: d => (d.skills || []).length ? `<p style="font-size:9pt;color:#555;">${(d.skills || []).join(', ')}</p>` : '' }, languages: { title: 'Languages', content: d => _langs(d.languages, accent2) } };
+    const sections = so ? _sectionsFromOrder(so, d, accent2, 'track', overrides) : null;
+    const body = sections != null ? sections : [
+      _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'track'),
+      _sec('Experience', _expPlain(d.experience), accent2, 'track'),
+      _sec('Education', _edu(d.education), accent2, 'track'),
+      _sec('Skills', (d.skills || []).length ? `<p style="font-size:9pt;color:#555;">${(d.skills || []).join(', ')}</p>` : '', accent2, 'track'),
+      _sec('Languages', _langs(d.languages, accent2), accent2, 'track'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};background:#fff;padding:2rem;color:#1a1a1a;font-size:10pt;">
       <div style="text-align:center;margin-bottom:1.5rem;">
         ${_photo(c.photoUrl, 80, '50%', 'margin:0 auto 10px;display:block;border:2px solid #e2e8f0;')}
@@ -450,17 +563,24 @@
         <div style="width:40px;height:2px;background:${accent2};margin:8px auto;"></div>
         <div>${_contactRow(c, ' · ', '#aaa')}</div>
       </div>
-      ${_sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'track')}
-      ${_sec('Experience', _expPlain(d.experience), accent2, 'track')}
-      ${_sec('Education', _edu(d.education), accent2, 'track')}
-      ${_sec('Skills', `<p style="font-size:9pt;color:#555;">${(d.skills || []).join(', ')}</p>`, accent2, 'track')}
-      ${_sec('Languages', _langs(d.languages, accent2), accent2, 'track')}
+      ${body}
     </div>`;
   }
 
-  function tPhotoExecutive(d, ac, fo, sp) {
+  function tPhotoExecutive(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const accent2 = ac || '#1e3a8a';
+    const so = opts && opts.sectionOrder;
+    const execOverrides = { summary: { title: 'Professional Summary', content: d => d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '' }, experience: { title: 'Professional Experience', content: d => _expPlain(d.experience) }, skills: { title: 'Skills', content: d => _skills(d.skills, '#eff6ff', accent2) }, languages: { title: 'Languages', content: d => _langs(d.languages, accent2) }, certifications: { title: 'Certifications', content: d => d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '' } };
+    const sections = so ? _sectionsFromOrder(so, d, accent2, 'track', execOverrides) : null;
+    const body = sections != null ? sections : [
+      _sec('Professional Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'track'),
+      _sec('Professional Experience', _expPlain(d.experience), accent2, 'track'),
+      _sec('Education', _edu(d.education), accent2, 'track'),
+      _sec('Skills', _skills(d.skills, '#eff6ff', accent2), accent2, 'track'),
+      _sec('Languages', _langs(d.languages, accent2), accent2, 'track'),
+      _sec('Certifications', d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '', accent2, 'track'),
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};background:#fff;padding:2rem;color:#1a1a1a;font-size:10pt;">
       <div style="display:flex;gap:1.25rem;align-items:flex-start;border-bottom:2px solid ${accent2};padding-bottom:1rem;margin-bottom:1.25rem;">
         ${_photo(c.photoUrl, 90, '4px', 'flex-shrink:0;border:1px solid #e2e8f0;')}
@@ -470,12 +590,7 @@
           <div>${_contactRow(c, ' · ', '#888')}</div>
         </div>
       </div>
-      ${_sec('Professional Summary', d.summary ? `<p style="font-size:9pt;color:#555;">${d.summary}</p>` : '', accent2, 'track')}
-      ${_sec('Professional Experience', _expPlain(d.experience), accent2, 'track')}
-      ${_sec('Education', _edu(d.education), accent2, 'track')}
-      ${_sec('Skills', _skills(d.skills, '#eff6ff', accent2), accent2, 'track')}
-      ${_sec('Languages', _langs(d.languages, accent2), accent2, 'track')}
-      ${d.certifications ? _sec('Certifications', `<p style="font-size:9pt;color:#555;">${d.certifications}</p>`, accent2, 'track') : ''}
+      ${body}
     </div>`;
   }
 
@@ -483,7 +598,7 @@
   // TWO COLUMN — configurable sidebar
   // ─────────────────────────────────────────────────────────────────────────
 
-  function _doubleCol(d, ac, fo, sp, sideColor, sideTxt, withPhoto) {
+  function _doubleCol(d, ac, fo, sp, sideColor, sideTxt, withPhoto, opts) {
     const c = d.contacts || {};
     const eduSide = (d.education || []).map(e => `<div style="margin-bottom:0.6rem;">
       <div style="font-size:8.5pt;font-weight:700;color:${sideTxt};">${_d(e.degree)}</div>
@@ -501,28 +616,63 @@
       <p style="font-size:8pt;color:#555;margin:2px 0 0;line-height:1.4;">${_d(e.description)}</p></div>
     </div>`).join('');
 
+    const so = opts && opts.sectionOrder;
+    let sideHtml, mainHtml;
+    if (so && so.type === 'double' && so.columns && so.columns[0] && so.columns[1]) {
+      const sideContent = {
+        contact: () => (c.email ? `<div style="font-size:8pt;color:${sideTxt};opacity:0.85;margin-bottom:5px;">${c.email}</div>` : '') + (c.phone ? `<div style="font-size:8pt;color:${sideTxt};opacity:0.85;margin-bottom:5px;">${c.phoneCode || ''} ${c.phone}</div>` : '') + ((c.city || c.country) ? `<div style="font-size:8pt;color:${sideTxt};opacity:0.85;margin-bottom:1rem;">${[c.city, c.country].filter(Boolean).join(', ')}</div>` : '') + (!(c.email || c.phone || (c.city || c.country)) ? `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your contact info here.</p>` : ''),
+        education: () => eduSide || `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your education here.</p>`,
+        skills: () => skillSide || `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your skills here.</p>`,
+        languages: () => langSide || `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your languages here.</p>`,
+        certifications: () => d.certifications ? `<p style="font-size:8pt;color:${sideTxt};opacity:0.8;">${d.certifications}</p>` : `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your certifications here.</p>`,
+      };
+      const mainContent = {
+        summary: () => d.summary ? `<p style="font-size:9pt;color:#64748b;margin:0;">${d.summary}</p>` : '<p style="font-size:8.5pt;color:#94a3b8;font-style:italic;margin:0;">Add your summary here.</p>',
+        experience: () => rightExpHtml || '<p style="font-size:9pt;color:#888;">Add your experience here.</p>',
+        awards: () => d.awards ? `<p style="font-size:9pt;color:#555;">${d.awards}</p>` : '<p style="font-size:8.5pt;color:#94a3b8;font-style:italic;">Add your awards here.</p>',
+      };
+      const titles = { contact: 'Contact', education: 'Education', skills: 'Skills', languages: 'Languages', certifications: 'Certifications', summary: 'Summary', experience: 'Experience', awards: 'Awards' };
+      sideHtml = so.columns[0].map((k, i) => {
+        const fn = sideContent[k];
+        if (!fn) return '';
+        const mt = i === 0 ? '' : 'margin-top:0.75rem;';
+        return `<h2 style="${sideTitleStyle}${mt}">${titles[k] || k}</h2>${fn()}`;
+      }).join('');
+      mainHtml = so.columns[1].map((k, i) => {
+        const fn = mainContent[k];
+        if (!fn) return '';
+        const top = i === 0 ? `border-top:4px solid ${ac};padding-top:1rem;margin-bottom:1rem;` : 'margin:1rem 0 0.75rem;';
+        return `<div style="${i === 0 ? 'border-top:4px solid ' + ac + ';padding-top:1rem;margin-bottom:1rem;' : ''}"><h2 style="font-size:9.5pt;font-weight:700;${i === 0 ? 'margin:0 0 0.5rem;' : 'padding-bottom:3px;border-bottom:1px solid #e2e8f0;margin-bottom:0.75rem;'}color:#1e293b;">${titles[k] || k}</h2>${fn()}</div>`;
+      }).join('');
+    } else {
+      sideHtml = `<h2 style="${sideTitleStyle}">Contact</h2>
+        ${c.email ? `<div style="font-size:8pt;color:${sideTxt};opacity:0.85;margin-bottom:5px;">${c.email}</div>` : ''}
+        ${c.phone ? `<div style="font-size:8pt;color:${sideTxt};opacity:0.85;margin-bottom:5px;">${c.phoneCode || ''} ${c.phone}</div>` : ''}
+        ${(c.city || c.country) ? `<div style="font-size:8pt;color:${sideTxt};opacity:0.85;margin-bottom:1rem;">${[c.city, c.country].filter(Boolean).join(', ')}</div>` : ''}
+        ${!(c.email || c.phone || (c.city || c.country)) ? `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your contact info here.</p>` : ''}
+        <h2 style="${sideTitleStyle}margin-top:0.75rem;">Education</h2>${eduSide || `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your education here.</p>`}
+        <h2 style="${sideTitleStyle}margin-top:0.75rem;">Skills</h2>${skillSide || `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your skills here.</p>`}
+        <h2 style="${sideTitleStyle}margin-top:0.75rem;">Languages</h2>${langSide || `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your languages here.</p>`}
+        <h2 style="${sideTitleStyle}margin-top:0.75rem;">Certifications</h2>${d.certifications ? `<p style="font-size:8pt;color:${sideTxt};opacity:0.8;">${d.certifications}</p>` : `<p style="font-size:8pt;color:${sideTxt};opacity:0.7;font-style:italic;">Add your certifications here.</p>`}`;
+      mainHtml = `<div style="border-top:4px solid ${ac};padding-top:1rem;margin-bottom:1rem;">
+          <h2 style="font-size:9.5pt;font-weight:700;margin:0 0 0.5rem;color:#1e293b;">Summary</h2>
+          ${d.summary ? `<p style="font-size:9pt;color:#64748b;margin:0;">${d.summary}</p>` : '<p style="font-size:8.5pt;color:#94a3b8;font-style:italic;margin:0;">Add your summary here.</p>'}
+        </div>
+        <h2 style="font-size:9.5pt;font-weight:700;padding-bottom:3px;border-bottom:1px solid #e2e8f0;margin-bottom:0.75rem;color:#1e293b;">Experience</h2>
+        ${rightExpHtml || '<p style="font-size:9pt;color:#888;">Add your experience here.</p>'}
+        <h2 style="font-size:9.5pt;font-weight:700;padding-bottom:3px;border-bottom:1px solid #e2e8f0;margin:1rem 0 0.75rem;color:#1e293b;">Awards</h2>${d.awards ? `<p style="font-size:9pt;color:#555;">${d.awards}</p>` : '<p style="font-size:8.5pt;color:#94a3b8;font-style:italic;">Add your awards here.</p>'}`;
+    }
+
     return `<div style="display:flex;min-height:297mm;font-family:${fo};line-height:${sp};font-size:10pt;">
       <div style="width:32%;background:${sideColor};padding:2rem 1.25rem;flex-shrink:0;">
         ${withPhoto ? _photo(c.photoUrl, 100, '50%', 'display:block;margin:0 auto 1rem;border:3px solid ' + (sideTxt === '#fff' ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.1)') + ';') : ''}
         <h1 style="font-size:14pt;font-weight:700;color:${sideTxt};margin:0 0 3px;">${c.name || 'Your Name'}</h1>
         <p style="font-size:9pt;color:${sideTxt};opacity:0.75;margin-bottom:1rem;">${c.jobTitle || ''}</p>
         <div style="height:2px;background:${sideTxt === '#fff' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)'};margin-bottom:1rem;"></div>
-        <h2 style="${sideTitleStyle}">Contact</h2>
-        ${c.email ? `<div style="font-size:8pt;color:${sideTxt};opacity:0.85;margin-bottom:5px;">${c.email}</div>` : ''}
-        ${c.phone ? `<div style="font-size:8pt;color:${sideTxt};opacity:0.85;margin-bottom:5px;">${c.phoneCode || ''} ${c.phone}</div>` : ''}
-        ${(c.city || c.country) ? `<div style="font-size:8pt;color:${sideTxt};opacity:0.85;margin-bottom:1rem;">${[c.city, c.country].filter(Boolean).join(', ')}</div>` : ''}
-        ${(d.education || []).length ? `<h2 style="${sideTitleStyle}margin-top:0.75rem;">Education</h2>${eduSide}` : ''}
-        ${(d.skills || []).length ? `<h2 style="${sideTitleStyle}margin-top:0.75rem;">Skills</h2>${skillSide}` : ''}
-        ${(d.languages || []).length ? `<h2 style="${sideTitleStyle}margin-top:0.75rem;">Languages</h2>${langSide}` : ''}
-        ${d.certifications ? `<h2 style="${sideTitleStyle}margin-top:0.75rem;">Certifications</h2><p style="font-size:8pt;color:${sideTxt};opacity:0.8;">${d.certifications}</p>` : ''}
+        ${sideHtml}
       </div>
       <div style="flex:1;background:#f8fafc;padding:2rem 1.75rem;border-left:1px solid #e2e8f0;">
-        <div style="border-top:4px solid ${ac};padding-top:1rem;margin-bottom:1rem;">
-          ${d.summary ? `<p style="font-size:9pt;color:#64748b;margin-bottom:1rem;">${d.summary}</p>` : ''}
-        </div>
-        <h2 style="font-size:9.5pt;font-weight:700;padding-bottom:3px;border-bottom:1px solid #e2e8f0;margin-bottom:0.75rem;color:#1e293b;">Experience</h2>
-        ${rightExpHtml || '<p style="font-size:9pt;color:#888;">No experience added.</p>'}
-        ${d.awards ? `<h2 style="font-size:9.5pt;font-weight:700;padding-bottom:3px;border-bottom:1px solid #e2e8f0;margin:1rem 0 0.75rem;color:#1e293b;">Awards</h2><p style="font-size:9pt;color:#555;">${d.awards}</p>` : ''}
+        ${mainHtml}
       </div>
     </div>`;
   }
@@ -531,9 +681,28 @@
   // SPECIAL TEMPLATES
   // ─────────────────────────────────────────────────────────────────────────
 
-  function tTimeline(d, ac, fo, sp) {
+  function tTimeline(d, ac, fo, sp, opts) {
     const c = d.contacts || {};
     const accent2 = ac || '#7c3aed';
+    const so = opts && opts.sectionOrder;
+    const timelineOverrides = { experience: { title: 'Experience', content: d => {
+      const timelineExp = (d.experience || []).map(e => `<div style="display:flex;gap:1rem;margin-bottom:1.25rem;position:relative;">
+        <div style="display:flex;flex-direction:column;align-items:center;width:16px;flex-shrink:0;">
+          <div style="width:12px;height:12px;border-radius:50%;background:${accent2};border:2px solid ${accent2};flex-shrink:0;"></div>
+          <div style="flex:1;width:2px;background:#e2e8f0;min-height:40px;margin-top:2px;"></div>
+        </div>
+        <div style="flex:1;padding-top:0;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <div style="font-weight:700;font-size:9pt;color:#1a1a1a;">${_d(e.role)}</div>
+            <div style="font-size:7.5pt;color:${accent2};font-weight:600;white-space:nowrap;background:${accent2}15;padding:1px 6px;border-radius:999px;">${_d(e.dates)}</div>
+          </div>
+          <div style="font-size:8.5pt;color:#64748b;margin-bottom:2px;">${_d(e.company)}</div>
+          <p style="font-size:8pt;color:#555;line-height:1.4;margin:0;">${_d(e.description)}</p>
+        </div>
+      </div>`).join('');
+      return timelineExp || '<p style="font-size:9pt;color:#888;">Add your experience here.</p>';
+    } }, skills: { title: 'Skills', content: d => _skills(d.skills, accent2 + '15', accent2) }, languages: { title: 'Languages', content: d => _langs(d.languages, accent2) } };
+    const sections = so ? _sectionsFromOrder(so, d, accent2, 'dot', timelineOverrides) : null;
     const timelineExp = (d.experience || []).map(e => `<div style="display:flex;gap:1rem;margin-bottom:1.25rem;position:relative;">
       <div style="display:flex;flex-direction:column;align-items:center;width:16px;flex-shrink:0;">
         <div style="width:12px;height:12px;border-radius:50%;background:${accent2};border:2px solid ${accent2};flex-shrink:0;"></div>
@@ -548,25 +717,28 @@
         <p style="font-size:8pt;color:#555;line-height:1.4;margin:0;">${_d(e.description)}</p>
       </div>
     </div>`).join('');
+    const body = sections != null ? sections : [
+      _sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;margin:0;">${d.summary}</p>` : '', accent2, 'dot'),
+      '<h2 style="font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:' + accent2 + ';margin-bottom:0.75rem;">Experience</h2>',
+      timelineExp || '<p style="font-size:9pt;color:#888;">Add your experience here.</p>',
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:0.5rem;"><div>',
+      _sec('Education', _edu(d.education), accent2, 'dot'),
+      _sec('Certifications', d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '', accent2, 'dot'),
+      '</div><div>',
+      _sec('Skills', _skills(d.skills, accent2 + '15', accent2), accent2, 'dot'),
+      _sec('Languages', _langs(d.languages, accent2), accent2, 'dot'),
+      '</div></div>',
+    ].join('');
     return `<div style="min-height:297mm;font-family:${fo};line-height:${sp};background:#fff;padding:2rem;color:#1a1a1a;font-size:10pt;">
-      <div style="background:${accent2}0d;border-left:4px solid ${accent2};padding:1rem 1.25rem;margin-bottom:1.5rem;border-radius:0 8px 8px 0;">
-        <h1 style="font-size:20pt;font-weight:800;color:${accent2};margin:0;">${c.name || 'Your Name'}</h1>
-        <p style="font-size:10pt;color:#64748b;margin:3px 0 6px;">${c.jobTitle || ''}</p>
-        <div>${_contactRow(c, ' · ', '#94a3b8')}</div>
-      </div>
-      ${d.summary ? `<p style="font-size:9pt;color:#555;margin-bottom:1.5rem;padding-left:1px;">${d.summary}</p>` : ''}
-      <h2 style="font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:${accent2};margin-bottom:0.75rem;">Experience</h2>
-      ${timelineExp || '<p style="font-size:9pt;color:#888;">No experience added.</p>'}
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:0.5rem;">
-        <div>
-          ${_sec('Education', _edu(d.education), accent2, 'dot')}
-          ${d.certifications ? _sec('Certifications', `<p style="font-size:9pt;color:#555;">${d.certifications}</p>`, accent2, 'dot') : ''}
-        </div>
-        <div>
-          ${_sec('Skills', _skills(d.skills, accent2 + '15', accent2), accent2, 'dot')}
-          ${_sec('Languages', _langs(d.languages, accent2), accent2, 'dot')}
+      <div style="display:flex;align-items:flex-start;gap:1.25rem;background:${accent2}0d;border-left:4px solid ${accent2};padding:1rem 1.25rem;margin-bottom:1.5rem;border-radius:0 8px 8px 0;">
+        ${_photo(c.photoUrl, 70, '50%', 'flex-shrink:0;border:2px solid ' + accent2 + ';')}
+        <div style="flex:1;">
+          <h1 style="font-size:20pt;font-weight:800;color:${accent2};margin:0;">${c.name || 'Your Name'}</h1>
+          <p style="font-size:10pt;color:#64748b;margin:3px 0 6px;">${c.jobTitle || ''}</p>
+          <div>${_contactRow(c, ' · ', '#94a3b8')}</div>
         </div>
       </div>
+      ${body}
     </div>`;
   }
 
@@ -585,15 +757,15 @@
       </div>
       <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:0;min-height:calc(297mm - 100px);">
         <div style="padding:1.5rem;border-right:1px solid #e2e8f0;">
-          ${d.summary ? `<p style="font-size:9pt;color:#555;margin-bottom:1.25rem;">${d.summary}</p>` : ''}
+          ${_sec('Summary', d.summary ? `<p style="font-size:9pt;color:#555;margin:0;">${d.summary}</p>` : '', accent2, 'bar')}
           ${_sec('Experience', _exp(d.experience, accent2, accent2, '#64748b'), accent2, 'bar')}
-          ${d.certifications ? _sec('Certifications', `<p style="font-size:9pt;color:#555;">${d.certifications}</p>`, accent2, 'bar') : ''}
+          ${_sec('Certifications', d.certifications ? `<p style="font-size:9pt;color:#555;">${d.certifications}</p>` : '', accent2, 'bar')}
         </div>
         <div style="padding:1.5rem;background:#f8fafc;">
           ${_sec('Skills', _skillsBar(d.skills, accent2), accent2, 'bar')}
           ${_sec('Education', _edu(d.education), accent2, 'bar')}
           ${_sec('Languages', _langs(d.languages, accent2), accent2, 'bar')}
-          ${d.awards ? _sec('Awards', `<p style="font-size:9pt;color:#555;">${d.awards}</p>`, accent2, 'bar') : ''}
+          ${_sec('Awards', d.awards ? `<p style="font-size:9pt;color:#555;">${d.awards}</p>` : '', accent2, 'bar')}
         </div>
       </div>
     </div>`;
@@ -611,31 +783,23 @@
     const apply = (html) => (fn ? fn(html) : html);
 
     switch (id) {
-      case 'classic':           return apply(tClassic(data, ac, fo, sp));
-      case 'minimal':           return apply(tMinimal(data, ac, fo, sp));
-      case 'executive':         return apply(tExecutive(data, ac, fo, sp));
-      case 'clean':             return apply(tClean(data, ac, fo, sp));
-      case 'bold':              return apply(tBold(data, ac, fo, sp));
-      case 'corporate':         return apply(tCorporate(data, ac, fo, sp));
-      case 'elegant':           return apply(tElegant(data, ac, fo, sp));
-      case 'simple':            return apply(tSimple(data, ac, fo, sp));
-      case 'photo_classic':     return apply(tPhotoClassic(data, ac, fo, sp));
-      case 'photo_modern':      return apply(tPhotoModern(data, ac, fo, sp));
-      case 'photo_minimal':     return apply(tPhotoMinimal(data, ac, fo, sp));
-      case 'photo_executive':   return apply(tPhotoExecutive(data, ac, fo, sp));
-      case 'modern':            return apply(_doubleCol(data, ac || '#1e3a5f', fo, sp, '#334155', '#fff', false));
-      case 'two_col_blue':      return apply(_doubleCol(data, '#3b82f6', fo, sp, '#1e40af', '#fff', false));
-      case 'two_col_green':     return apply(_doubleCol(data, '#10b981', fo, sp, '#065f46', '#fff', false));
-      case 'two_col_red':       return apply(_doubleCol(data, '#dc2626', fo, sp, '#7f1d1d', '#fff', false));
-      case 'two_col_warm':      return apply(_doubleCol(data, '#f59e0b', fo, sp, '#78350f', '#fff', false));
-      case 'two_col_light':     return apply(_doubleCol(data, '#475569', fo, sp, '#f1f5f9', '#1e293b', false));
-      case 'two_col_photo_blue':  return apply(_doubleCol(data, '#3b82f6', fo, sp, '#1e3a8a', '#fff', true));
-      case 'two_col_photo_dark':  return apply(_doubleCol(data, '#64748b', fo, sp, '#0f172a', '#fff', true));
-      case 'two_col_photo_green': return apply(_doubleCol(data, '#16a34a', fo, sp, '#14532d', '#fff', true));
-      case 'two_col_photo_teal':  return apply(_doubleCol(data, '#0891b2', fo, sp, '#164e63', '#fff', true));
-      case 'timeline':          return apply(tTimeline(data, ac, fo, sp));
-      case 'infographic':       return apply(tInfographic(data, ac, fo, sp));
-      default:                  return apply(tClassic(data, ac, fo, sp));
+      case 'classic':           return apply(tClassic(data, ac, fo, sp, opts));
+      case 'modern_simple':     return apply(tMinimal(data, ac, fo, sp, opts));
+      case 'modern_with_photo': return apply(tPhotoModern(data, ac, fo, sp, opts));
+      case 'chronological':     return apply(tClassic(data, ac, fo, sp, opts));
+      case 'functional':        return apply(tMinimal(data, ac, fo, sp, opts));
+      case 'hybrid':            return apply(_doubleCol(data, ac || '#1e3a5f', fo, sp, '#334155', '#fff', true, opts));
+      case 'creative':          return apply(tTimeline(data, ac, fo, sp, opts));
+      case 'simple_ats':        return apply(tClean(data, ac, fo, sp, opts));
+      case 'two_col_ats':       return apply(_doubleCol(data, '#475569', fo, sp, '#f1f5f9', '#1e293b', true, opts));
+      case 'polished':          return apply(tElegant(data, ac, fo, sp, opts));
+      case 'minimalist':        return apply(tMinimal(data, ac, fo, sp, opts));
+      case 'elegant':           return apply(tElegant(data, ac, fo, sp, opts));
+      case 'teenager':          return apply(tSimple(data, ac, fo, sp, opts));
+      case 'internship':        return apply(tSimple(data, ac, fo, sp, opts));
+      case 'entry_level':       return apply(tClean(data, ac, fo, sp, opts));
+      case 'career_change':     return apply(tMinimal(data, ac, fo, sp, opts));
+      default:                  return apply(tClassic(data, ac, fo, sp, opts));
     }
   }
 
