@@ -27,6 +27,7 @@ instance/
 *.db
 *.sqlite3
 data/*.db
+backend/data/*.db
 
 # IDE / OS
 .idea/
