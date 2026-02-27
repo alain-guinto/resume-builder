@@ -4,13 +4,19 @@ from datetime import datetime
 
 from flask import (
     Blueprint, flash, jsonify, redirect, render_template,
-    request, session, url_for,
+    request, session, url_for, current_app,
 )
 from flask_login import current_user, login_required, login_user, logout_user
 
 from app.models.user import User, db
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
+
+
+def _frontend_redirect(path: str = "/dashboard"):
+    """Redirect to frontend URL (for OAuth callback when using SPA)."""
+    base = current_app.config.get("FRONTEND_URL", "http://localhost:3000")
+    return redirect(f"{base.rstrip('/')}{path}")
 
 # ── Lazy OAuth instance (imported from app factory) ──────────────────────────
 def _oauth():
@@ -27,6 +33,7 @@ def email_login():
     data  = request.get_json(silent=True) or {}
     email = data.get("email", "").strip().lower()
     pwd   = data.get("password", "")
+    remember = data.get("remember", True)
 
     if not email or not pwd:
         return jsonify({"error": "Email and password are required."}), 400
@@ -41,7 +48,7 @@ def email_login():
 
     user.last_login_at = datetime.utcnow()
     db.session.commit()
-    login_user(user, remember=True)
+    login_user(user, remember=remember)
     return jsonify({"ok": True, "redirect": session.pop("next_url", "/dashboard")}), 200
 
 
@@ -60,7 +67,7 @@ def register():
     if User.query.filter_by(email=email).first():
         return jsonify({"error": "An account with that email already exists."}), 409
 
-    user = User(name=name, email=email)
+    user = User(name=name, email=email, plan_id=1)
     user.set_password(pwd)
     db.session.add(user)
     db.session.commit()
@@ -68,9 +75,11 @@ def register():
     return jsonify({"ok": True, "redirect": "/dashboard"}), 201
 
 
-@auth_bp.route("/logout")
+@auth_bp.route("/logout", methods=["GET", "POST"])
 def logout():
     logout_user()
+    if request.method == "POST" or request.is_json:
+        return jsonify({"ok": True})
     return redirect("/")
 
 
@@ -114,12 +123,14 @@ def google_callback():
             name       = user_info.get("name", ""),
             google_id  = g_id,
             avatar_url = user_info.get("picture", ""),
+            plan_id    = 1,
         )
         db.session.add(user)
 
     db.session.commit()
     login_user(user, remember=True)
-    return redirect(session.pop("next_url", "/dashboard"))
+    next_path = session.pop("next_url", "/dashboard")
+    return _frontend_redirect(next_path)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -167,9 +178,11 @@ def facebook_callback():
             name        = fb_data.get("name", ""),
             facebook_id = fb_id,
             avatar_url  = pic,
+            plan_id     = 1,
         )
         db.session.add(user)
 
     db.session.commit()
     login_user(user, remember=True)
-    return redirect(session.pop("next_url", "/dashboard"))
+    next_path = session.pop("next_url", "/dashboard")
+    return _frontend_redirect(next_path)

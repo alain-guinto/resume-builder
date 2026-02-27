@@ -19,8 +19,11 @@ class User(UserMixin, db.Model):
     facebook_id   = db.Column(db.String(120), unique=True, nullable=True, index=True)
     avatar_url    = db.Column(db.String(512),  nullable=True)
     is_active     = db.Column(db.Boolean, default=True, nullable=False)
+    plan_id       = db.Column(db.Integer, db.ForeignKey("subscription_plans.id"), nullable=True, default=1, index=True)
     created_at    = db.Column(db.DateTime, default=datetime.utcnow)
     last_login_at = db.Column(db.DateTime, nullable=True)
+
+    plan = db.relationship("SubscriptionPlan", backref="users", lazy="joined")
 
     # ── Password helpers ──────────────────────────────────────────────────────
     def set_password(self, password: str) -> None:

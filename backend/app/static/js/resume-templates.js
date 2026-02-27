@@ -91,12 +91,54 @@
       certifications: 'PMP · Certified ScrumMaster · PRINCE2 Practitioner',
       awards: 'Project Excellence Award 2021 · Delivery Star Q4 2022',
     },
+    {
+      contacts: { name:'Marcus Webb', jobTitle:'Senior Software Engineer', email:'marcus.webb@tech.io', phone:'415 555 9012', phoneCode:'+1', city:'San Francisco', country:'United States', location:'San Francisco, CA', linkedin:'linkedin.com/in/marcuswebb', photoUrl:'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' },
+      summary: 'Full-stack engineer with 8+ years building scalable cloud-native applications. Expert in distributed systems, microservices, and developer tooling. Passionate about clean architecture and performance optimization.',
+      experience: [
+        { dates:'2022 – Present', role:'Senior Software Engineer', company:'Stripe', description:'Led design and implementation of real-time payment APIs serving 10M+ requests/day. Reduced latency by 35% through architectural improvements.' },
+        { dates:'2019 – 2022', role:'Software Engineer', company:'Vercel', description:'Built core Next.js infrastructure and edge runtime features. Contributed to open-source projects with 50K+ GitHub stars.' },
+        { dates:'2016 – 2019', role:'Full-Stack Developer', company:'TechStartup Inc.', description:'Architected and shipped product from MVP to 100K+ users. Implemented CI/CD pipelines and monitoring systems.' },
+      ],
+      education: [{ school:'Stanford University', degree:'M.S. Computer Science', dates:'2014–2016' }, { school:'UC Berkeley', degree:'B.S. Electrical Engineering', dates:'2010–2014' }],
+      skills: ['TypeScript', 'React', 'Node.js', 'Kubernetes', 'AWS', 'PostgreSQL', 'GraphQL', 'Rust'],
+      languages: [{ name:'English', level:5 }, { name:'Spanish', level:3 }],
+      certifications: 'AWS Solutions Architect Professional · Kubernetes Certified Administrator',
+      awards: 'Tech Excellence Award 2023 · Open Source Contributor of the Year',
+    },
+    {
+      contacts: { name:'Priya Sharma', jobTitle:'Staff Engineer', email:'priya.sharma@cloud.io', phone:'+91 98765 43210', phoneCode:'+91', city:'Bangalore', country:'India', location:'Bangalore, India', linkedin:'linkedin.com/in/priyasharma', photoUrl:'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop' },
+      summary: 'Staff engineer with 12 years in backend systems and platform engineering. Led teams building infrastructure at scale. Speaks at conferences on distributed systems and reliability.',
+      experience: [
+        { dates:'2021 – Present', role:'Staff Engineer', company:'Google Cloud', description:'Architected multi-region data pipeline serving 1B+ events daily. Drove SRE practices reducing incident MTTR by 60%.' },
+        { dates:'2017 – 2021', role:'Senior Engineer', company:'Netflix', description:'Built chaos engineering platform for resilience testing. Led migration of critical services to Kubernetes.' },
+        { dates:'2013 – 2017', role:'Software Engineer', company:'Flipkart', description:'Designed order processing system handling 10M+ daily transactions during peak sales events.' },
+      ],
+      education: [{ school:'IIT Bombay', degree:'B.Tech. Computer Science', dates:'2009–2013' }],
+      skills: ['Go', 'Java', 'Kafka', 'Kubernetes', 'Terraform', 'Prometheus', 'gRPC', 'Distributed Systems'],
+      languages: [{ name:'English', level:5 }, { name:'Hindi', level:5 }],
+      certifications: 'Google Cloud Professional · Certified Kubernetes Administrator',
+      awards: 'Women in Tech Leadership 2023 · SRE Conference Speaker',
+    },
+    {
+      contacts: { name:'Ryan Kim', jobTitle:'Tech Lead', email:'ryan.kim@dev.io', phone:'+82 10 1234 5678', phoneCode:'+82', city:'Seoul', country:'South Korea', location:'Seoul, South Korea', linkedin:'linkedin.com/in/ryankim', photoUrl:'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop' },
+      summary: 'Tech lead with 10 years building mobile and web platforms. Expert in React Native, iOS, and cloud architecture. Passionate about mentoring and team growth.',
+      experience: [
+        { dates:'2020 – Present', role:'Tech Lead', company:'Kakao', description:'Led team of 8 engineers building messaging platform. Shipped features used by 50M+ daily active users.' },
+        { dates:'2016 – 2020', role:'Senior Mobile Engineer', company:'Coupang', description:'Built mobile apps for e-commerce. Delivered 99.9% uptime during peak shopping seasons.' },
+        { dates:'2016 – 2018', role:'Software Engineer', company:'Naver', description:'Developed search and recommendation systems. Improved relevance metrics by 25%.' },
+      ],
+      education: [{ school:'KAIST', degree:'M.S. Computer Science', dates:'2012–2014' }],
+      skills: ['React Native', 'Swift', 'Kotlin', 'Node.js', 'PostgreSQL', 'Redis', 'AWS'],
+      languages: [{ name:'Korean', level:5 }, { name:'English', level:5 }],
+      certifications: 'AWS Developer Associate · iOS Development Certified',
+      awards: 'Tech Excellence Award 2022 · Best Mobile App 2021',
+    },
   ];
 
   // ── Assign persona per template ────────────────────────────────────────────
   const _PERSONA_MAP = {
     classic: 0, modern_simple: 1, modern_with_photo: 2, chronological: 0,
-    functional: 1, hybrid: 5, creative: 5, simple_ats: 1, two_col_ats: 5,
+    functional: 1, hybrid: 6, creative: 5, simple_ats: 1, two_col_ats: 7,
     polished: 2, minimalist: 1, elegant: 2, teenager: 4, internship: 4,
     entry_level: 1, career_change: 1,
   };
@@ -116,7 +158,7 @@
     modern_with_photo:{ name: 'Modern with Photo',cat: 'Professional',  hasPhoto: true  },
     chronological:    { name: 'Chronological',    cat: 'Professional',  hasPhoto: false },
     functional:       { name: 'Functional',       cat: 'Professional',  hasPhoto: false },
-    hybrid:           { name: 'Hybrid',           cat: 'Two Column',    hasPhoto: false },
+    hybrid:           { name: 'Tech Modern',      cat: 'Two Column',    hasPhoto: true },
     creative:         { name: 'Creative',         cat: 'Creative',       hasPhoto: false },
     simple_ats:       { name: 'Simple ATS',       cat: 'ATS Optimized', hasPhoto: false },
     two_col_ats:      { name: 'Two Column ATS',  cat: 'ATS Optimized', hasPhoto: false },

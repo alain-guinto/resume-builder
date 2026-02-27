@@ -24,10 +24,15 @@ class Config:
         f"sqlite:///{BASE_DIR / 'data' / 'resumeforge.db'}",
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ENGINE_OPTIONS      = {
-        "connect_args": {"check_same_thread": False},  # required for SQLite + Flask threading
-        "pool_pre_ping": True,                          # recover from dropped connections
-    }
+    # check_same_thread is SQLite-only; PostgreSQL (psycopg2) rejects it
+    _db_url = os.environ.get("DATABASE_URL", "")
+    if _db_url.startswith("postgresql"):
+        SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
+    else:
+        SQLALCHEMY_ENGINE_OPTIONS = {
+            "connect_args": {"check_same_thread": False},
+            "pool_pre_ping": True,
+        }
 
     # ── Google OAuth ──────────────────────────────────────────────────────────
     GOOGLE_CLIENT_ID     = os.environ.get("GOOGLE_CLIENT_ID", "")
@@ -41,6 +46,9 @@ class Config:
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
     REMEMBER_COOKIE_HTTPONLY = True
+
+    # ── Frontend (for OAuth redirect) ────────────────────────────────────────
+    FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 
 
 class DevelopmentConfig(Config):
