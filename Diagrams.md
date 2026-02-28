@@ -319,9 +319,19 @@ User > Editor: Edit content, upload photo
 Editor > API [icon: server, color: purple]: POST /api/resume (save)
 API > Editor: Success
 
-User > Editor: Click Export PDF
-Editor > ExportAPI [icon: server, color: purple]: POST /api/export/pdf
-ExportAPI > ExportService [icon: tool, color: green]: build_pdf
-ExportService > Editor: PDF blob
-Editor > User: Download PDF
+User > Editor: Click Export PDF or Export DOCX
+Editor > ExportAPI [icon: server, color: purple]: POST /api/export/pdf or /api/export/docx
+ExportAPI > PlanDB [icon: database, color: orange]: Get user plan, exports this month
+PlanDB > ExportAPI: plan limits, export count
+alt [label: "Export limit exceeded"] {
+  ExportAPI > Editor: 403 export_limit_reached
+  Editor > User: Show upgrade prompt
+}
+else [label: "Within limit"] {
+  ExportAPI > ExportService [icon: tool, color: green]: build_pdf or build_docx
+  ExportService > ExportAPI: Blob
+  ExportAPI > ExportLog [icon: database, color: orange]: Record usage
+  ExportAPI > Editor: PDF or DOCX blob
+  Editor > User: Download PDF or DOCX
+}
 ```
