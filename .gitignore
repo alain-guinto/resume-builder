@@ -27,6 +27,7 @@ instance/
 *.db
 *.sqlite3
 data/*.db
+backend/data/*.db
 
 # IDE / OS
 .idea/
@@ -41,3 +42,15 @@ logs/
 # Next.js frontend
 frontend/.next/
 frontend/node_modules/
+
+# Architecture Docs
+MockDataLogicList.md
+Google-SSO-Guide.md
+Facebook-SSO-Guide.md
+Diagrams.md
+DBSchema.md
+DBMigration.md
+ConnectionSettings.md
+Architecture.md
+"PDFs Upload Issue.md"
+
