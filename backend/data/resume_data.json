@@ -1,0 +1,116 @@
+{
+  "contacts": {
+    "name": "Alain Guinto",
+    "title": "Senior Software Engineer",
+    "email": "alain.guinto@yahoo.com",
+    "phone": "+1 (555) 123-4567",
+    "location": "San Francisco, CA",
+    "linkedin": "linkedin.com/in/alexjohnson",
+    "city": "Mandaluyong",
+    "country": "Philippines",
+    "firstName": "Alain",
+    "jobTitle": "Solutions Architect",
+    "lastName": "Guinto",
+    "phoneCode": "+1"
+  },
+  "summary": "Solutions Architect at GCash with 17+ years in IT, passionate about designing scalable, resilient, and business-driven systems that turn complex problems into elegant solutions. Started as a developer and evolved through roles as database administrator, ETL developer, data & analytics developer, and data engineer. Focus on bridging strategy with execution, collaboration, and clear communication. Experience spans Financial Services, Telecommunications, BPO, Logistics, and FinTech. Driven by curiosity, problem-solving, and the belief that the right architecture unlocks innovation at scale.",
+  "experience": [
+    {
+      "company": "Data Engineering - Manager — GCash",
+      "title": "Designing scalable, resilient, and business-driven systems.",
+      "dates": "Aug 2024",
+      "bullets": [
+        ""
+      ]
+    },
+    {
+      "company": "Data and Analytics Developer — Volt Bank",
+      "title": "Led data engineering initiatives and team delivery for GCash's data platform.",
+      "dates": "Oct 2022 – Mar 2025",
+      "bullets": [
+        ""
+      ]
+    },
+    {
+      "company": "Team Lead - Teradata Database Administrator — Teradata, Philippines",
+      "title": "Developed data and analytics solutions for financial services.",
+      "dates": "Oct 2019 – Aug 2022",
+      "bullets": [
+        ""
+      ]
+    },
+    {
+      "company": "Team Lead - Production Support — Teradata",
+      "title": "Managed services offshore project with Delta Airlines.",
+      "dates": "Jul 2018 – Sep 2019",
+      "bullets": [
+        ""
+      ]
+    },
+    {
+      "company": "Production Support Specialist — Teradata",
+      "title": "Onshore project with Standard Chartered Bank.",
+      "dates": "Mar 2016 – Jul 2018",
+      "bullets": [
+        ""
+      ]
+    },
+    {
+      "company": "ETL Developer — Teradata",
+      "title": "Onshore project with Standard Chartered Bank.",
+      "dates": "Oct 2014 – Feb 2016",
+      "bullets": [
+        ""
+      ]
+    },
+    {
+      "company": "Production Support Specialist — Teradata",
+      "title": "Offshore project with Standard Chartered Bank. Built ETL scripts including packaging, testing, and production deployment.",
+      "dates": "Apr 2014 – Sep 2014",
+      "bullets": [
+        ""
+      ]
+    },
+    {
+      "company": "Applications Developer II — Federal Phoenix Assurance Co., Inc.",
+      "title": "Onsite project with Globe Telecom. Ad-hoc queries, data loading, and report building.",
+      "dates": "Jun 2012 – Mar 2014",
+      "bullets": [
+        ""
+      ]
+    },
+    {
+      "company": "Applications Developer — Transcom",
+      "title": "Report development and system maintenance.",
+      "dates": "Sep 2011 – Dec 2011",
+      "bullets": [
+        ""
+      ]
+    },
+    {
+      "company": "",
+      "title": "Application maintenance, scripting, and report building.",
+      "dates": "Jun 2008 – Aug 2011",
+      "bullets": [
+        ""
+      ]
+    }
+  ],
+  "education": [],
+  "skills": [
+    "Cloud Security",
+    "Application Security",
+    "Reliability Engineering",
+    "Solutions Architecture",
+    "Data Engineering",
+    "Prompt Engineering",
+    "AI-Assisted Development",
+    "LLM Integration",
+    "Generative AI"
+  ],
+  "certifications": "",
+  "languages": [],
+  "additional": "",
+  "awards": "",
+  "template": "classic"
+}

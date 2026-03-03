@@ -45,6 +45,18 @@ ORM: Flask-SQLAlchemy
 
 ---
 
+### Table: `export_logs`
+
+| Column      | Type         | Constraints                    | Description                          |
+|-------------|--------------|--------------------------------|--------------------------------------|
+| id          | INTEGER      | PRIMARY KEY                    | Auto-increment ID                    |
+| user_id     | INTEGER      | FK(users.id), NOT NULL, INDEX  | User who exported                   |
+| created_at  | DATETIME     | DEFAULT utcnow                 | Export timestamp                     |
+
+**Source:** `app/models/export_log.py`
+
+---
+
 ## Current ER Diagram (Text)
 
 ```
